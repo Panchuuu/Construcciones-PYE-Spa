@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
     : {}),
 
   experimental: {
+    /**
+     * El hosting (CloudLinux) limita los procesos simultáneos de la
+     * cuenta. Por defecto Next lanza un worker por núcleo del servidor
+     * al generar las páginas estáticas y el build muere con
+     * "spawn EAGAIN". Con 1 worker el build es algo más lento pero
+     * cabe dentro del límite (el sitio es pequeño).
+     */
+    cpus: 1,
     serverActions: {
       /**
        * Permite enviar formularios (Server Actions: login, actas, etc.)
