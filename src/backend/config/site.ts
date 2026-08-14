@@ -2,8 +2,6 @@
  * ────────────────────────────────────────────────────────────────
  *  DATOS DE LA EMPRESA — edita SOLO este archivo para actualizar
  *  el sitio completo (teléfonos, correos, dirección, redes, etc.)
- *
- *  Los valores marcados con  ⚠️ REEMPLAZAR  son provisorios.
  * ────────────────────────────────────────────────────────────────
  */
 
@@ -17,8 +15,7 @@ export const site = {
     "Empresa constructora chilena especializada en hojalatería, techumbres, obra gruesa, edificación, remodelación y montaje. Ejecutamos proyectos con planificación rigurosa, seguridad certificada y entrega en plazo.",
 
   /** URL final del sitio (se usa en SEO, sitemap y Open Graph) */
-  /** ⚠️ REEMPLAZAR cuando tengas el dominio definitivo */
-  url: "https://construccionespye.cl",
+  url: "https://construccionespyespa.cl",
 
   foundedYear: 2022,
 
