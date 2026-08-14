@@ -1,0 +1,112 @@
+# Despliegue en DirectAdmin (ServidoresPH)
+
+Guía para publicar el sitio en el hosting propio con **Setup Node.js App**.
+Requisitos ya verificados: Node ≥ 20.9 en el servidor y acceso SSH (Terminal).
+
+---
+
+## 1. Agregar el dominio a la cuenta
+
+**DirectAdmin → Dominios** → verificar que `construccionespyespa.cl` esté en
+la lista. Si no, agregarlo ahí (Add Domain).
+
+## 2. Crear la aplicación Node
+
+**DirectAdmin → Setup Node.js App → Create Application**:
+
+| Campo                    | Valor                          |
+| ------------------------ | ------------------------------ |
+| Node.js version          | 20.x (la más alta disponible)  |
+| Application mode         | Production                     |
+| Application root         | `construcciones-pye`           |
+| Application URL          | `construccionespyespa.cl`      |
+| Application startup file | `server.js`                    |
+
+Crear. El panel mostrará arriba un comando del estilo:
+
+```
+source /home/USUARIO/nodevenv/construcciones-pye/20/bin/activate && cd /home/USUARIO/construcciones-pye
+```
+
+**Copiarlo**: es la forma de "entrar" al entorno de la app en la terminal.
+(En adelante lo llamamos *comando de activación*.)
+
+## 3. Clonar el proyecto (Terminal)
+
+Abrir **Terminal** y ejecutar:
+
+```bash
+cd ~/construcciones-pye
+git init
+git remote add origin https://github.com/Panchuuu/Construcciones-PYE-Spa.git
+git pull origin main
+```
+
+## 4. Variables de entorno
+
+Crear el archivo `.env` dentro de `~/construcciones-pye`:
+
+```bash
+cat > .env <<'FIN'
+DATABASE_URL="file:./prisma/data.db"
+AUTH_SECRET=PEGA_AQUI_UN_SECRETO_LARGO
+FIN
+```
+
+- `AUTH_SECRET`: cadena aleatoria larga (64 caracteres hex). Generar una con
+  `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+  **Sin esta variable el panel /admin no arranca en producción.**
+- Cuando se quiera activar el correo del formulario, agregar también
+  `RESEND_API_KEY=...` (ver `.env.example`).
+
+## 5. Instalar, migrar y compilar
+
+Pegar el *comando de activación* (paso 2) y luego:
+
+```bash
+npm install            # instala dependencias y genera el cliente Prisma
+npx prisma migrate deploy   # crea las tablas en prisma/data.db
+npm run build          # compila el sitio para producción
+```
+
+> Si `npm run build` termina "Killed", la cuenta se quedó sin RAM durante la
+> compilación. Avisar al desarrollador: hay plan B (compilar fuera y subir
+> el resultado).
+
+## 6. Crear el primer administrador
+
+```bash
+npm run admin:crear -- "Nombre Apellido" correo@ejemplo.cl "contraseña-segura"
+```
+
+## 7. Arrancar
+
+**Setup Node.js App → Restart** sobre la aplicación.
+Visitar `https://construccionespyespa.cl` (sitio) y
+`https://construccionespyespa.cl/admin/login` (panel).
+
+## 8. SSL
+
+**DirectAdmin → Certificados SSL** → emitir Let's Encrypt para
+`construccionespyespa.cl` y `www` si no está ya activo.
+
+---
+
+## Actualizar el sitio (cada vez que haya cambios)
+
+Con el *comando de activación* pegado:
+
+```bash
+git pull origin main
+npm install
+npx prisma migrate deploy
+npm run build
+```
+
+y **Restart** en Setup Node.js App.
+
+## Copias de seguridad
+
+Los datos del panel viven en **`~/construcciones-pye/prisma/data.db`**
+(no está en Git). Incluir ese archivo en los respaldos del hosting
+(JetBackup ya respalda el home, pero conviene verificarlo).
