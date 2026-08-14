@@ -6,6 +6,10 @@ import {
   formatFolio,
   parseItems,
 } from "@/backend/services/deliveries.service";
+import {
+  deliveryPdfFilename,
+  generateDeliveryPdf,
+} from "@/backend/services/delivery-pdf.service";
 import { sendMail } from "@/backend/services/mailer.service";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -165,10 +169,27 @@ export async function sendDeliveryEmail(delivery: DeliveryWithWork) {
     </table>
   </div>`;
 
+  // El acta va adjunta como PDF; si la generación fallara, el correo
+  // igual sale con el detalle en el cuerpo.
+  let attachments;
+  try {
+    const pdf = await generateDeliveryPdf(delivery);
+    attachments = [
+      {
+        filename: deliveryPdfFilename(delivery),
+        content: Buffer.from(pdf),
+        contentType: "application/pdf",
+      },
+    ];
+  } catch (error) {
+    console.error("[entregas] No se pudo generar el PDF del acta:", error);
+  }
+
   return sendMail({
     to,
     subject: `Acta de entrega ${folio} — ${delivery.work.title} — ${site.name}`,
     html,
     text: buildDeliveryText(delivery),
+    attachments,
   });
 }

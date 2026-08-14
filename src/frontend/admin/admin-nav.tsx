@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   ClipboardCheck,
   HardHat,
+  Inbox,
   LayoutDashboard,
   Users,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import { cn } from "@/frontend/lib/utils";
 
 const links = [
   { href: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
+  { href: "/admin/cotizaciones", label: "Cotizaciones", icon: Inbox },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/trabajos", label: "Trabajos", icon: HardHat },
   { href: "/admin/entregas", label: "Entregas", icon: ClipboardCheck },

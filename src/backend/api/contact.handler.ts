@@ -7,6 +7,7 @@ import {
   type ContactResponse,
 } from "@/backend/schemas/contact.schema";
 import { submitQuoteRequest } from "@/backend/services/quote.service";
+import { saveQuoteRequest } from "@/backend/services/quotes.service";
 import {
   checkRateLimit,
   getClientId,
@@ -65,9 +66,20 @@ export async function handleContactRequest(request: Request) {
     return json({ ok: true, message: "Solicitud recibida." }, 200);
   }
 
+  // La cotización se guarda SIEMPRE en la base de datos (aparece en el
+  // panel de administración), incluso si después el correo falla.
+  let saved = false;
+  try {
+    await saveQuoteRequest(parsed.data);
+    saved = true;
+  } catch (error) {
+    console.error("[contacto] No se pudo guardar la cotización:", error);
+  }
+
   const result = await submitQuoteRequest(parsed.data);
 
-  if (!result.delivered) {
+  // Solo si NO quedó registrada en ninguna parte pedimos reintentar.
+  if (!result.delivered && !saved) {
     const message =
       result.reason === "not-configured"
         ? "El envío de correos aún no está configurado en el servidor. Escríbenos por WhatsApp y te respondemos de inmediato."

@@ -14,13 +14,13 @@ la lista. Si no, agregarlo ahí (Add Domain).
 
 **DirectAdmin → Setup Node.js App → Create Application**:
 
-| Campo                    | Valor                          |
-| ------------------------ | ------------------------------ |
-| Node.js version          | 20.x (la más alta disponible)  |
-| Application mode         | Production                     |
-| Application root         | `construcciones-pye`           |
-| Application URL          | `construccionespyespa.cl`      |
-| Application startup file | `server.js`                    |
+| Campo                    | Valor                            |
+| ------------------------ | -------------------------------- |
+| Node.js version          | 22.x (LTS más alta disponible)   |
+| Application mode         | Production                       |
+| Application root         | `construcciones-pye`             |
+| Application URL          | `construccionespyespa.cl`        |
+| Application startup file | `server.js`                      |
 
 Crear. El panel mostrará arriba un comando del estilo:
 
@@ -47,27 +47,39 @@ git pull origin main
 Crear el archivo `.env` dentro de `~/construcciones-pye`:
 
 ```bash
-cat > .env <<'FIN'
-DATABASE_URL="file:./prisma/data.db"
-AUTH_SECRET=PEGA_AQUI_UN_SECRETO_LARGO
-FIN
+echo 'DATABASE_URL="file:./prisma/data.db"' > .env
+echo 'AUTH_SECRET=PEGA_AQUI_UN_SECRETO_LARGO' >> .env
 ```
 
 - `AUTH_SECRET`: cadena aleatoria larga (64 caracteres hex). Generar una con
   `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
   **Sin esta variable el panel /admin no arranca en producción.**
-- Cuando se quiera activar el correo del formulario, agregar también
-  `RESEND_API_KEY=...` (ver `.env.example`).
+- Para activar el correo (formulario y actas) agregar también las variables
+  `SMTP_*` (Gmail con contraseña de aplicación; ver `.env.example`).
 
 ## 5. Instalar, migrar y compilar
 
 Pegar el *comando de activación* (paso 2) y luego:
 
 ```bash
-npm install            # instala dependencias y genera el cliente Prisma
-npx prisma migrate deploy   # crea las tablas en prisma/data.db
-npm run build          # compila el sitio para producción
+npm install --include=dev   # TODAS las dependencias (el modo Production
+                            # omite las dev, pero el build las necesita)
+npx prisma generate         # cliente Prisma (el postinstall falla en este
+                            # hosting porque corre fuera del proyecto: ignorar
+                            # su error y ejecutar esto a mano)
+npx prisma migrate deploy   # crea/actualiza las tablas en prisma/data.db
+npm run build               # compila el sitio para producción
 ```
+
+> **Nota del hosting (CloudLinux):** la carpeta `node_modules` que crea el
+> panel es un enlace simbólico y Turbopack no compila a través de él. Si
+> `npm run build` reclama por "Symlink … filesystem root" o no encuentra
+> módulos, convertirla en carpeta real:
+>
+> ```bash
+> rm -f node_modules
+> cp -a ~/nodevenv/construcciones-pye/22/lib/node_modules ./node_modules
+> ```
 
 > Si `npm run build` termina "Killed", la cuenta se quedó sin RAM durante la
 > compilación. Avisar al desarrollador: hay plan B (compilar fuera y subir
@@ -98,7 +110,8 @@ Con el *comando de activación* pegado:
 
 ```bash
 git pull origin main
-npm install
+npm install --include=dev
+npx prisma generate
 npx prisma migrate deploy
 npm run build
 ```

@@ -9,10 +9,13 @@ import {
   deliverySchema,
   toFieldErrors,
   workSchema,
+  QUOTE_STATUSES,
   type MaterialItem,
+  type QuoteStatus,
 } from "@/backend/schemas/admin.schema";
 import * as clients from "@/backend/services/clients.service";
 import * as deliveries from "@/backend/services/deliveries.service";
+import * as quotes from "@/backend/services/quotes.service";
 import * as works from "@/backend/services/works.service";
 import {
   sendDeliveryEmail,
@@ -135,6 +138,25 @@ export async function deleteDeliveryAction(deliveryId: string) {
   redirect("/admin/entregas");
 }
 
+/* ── Cotizaciones ──────────────────────────────────────────── */
+
+export async function setQuoteStatusAction(
+  quoteId: string,
+  status: string,
+) {
+  await requireAdmin();
+  if (!(status in QUOTE_STATUSES)) return;
+  await quotes.updateQuoteStatus(quoteId, status as QuoteStatus);
+  revalidatePath("/admin", "layout");
+}
+
+export async function deleteQuoteAction(quoteId: string) {
+  await requireAdmin();
+  await quotes.deleteQuote(quoteId);
+  revalidatePath("/admin", "layout");
+  redirect("/admin/cotizaciones");
+}
+
 export type SendEmailState =
   | { ok: true; message: string }
   | { ok: false; message: string }
@@ -155,7 +177,7 @@ export async function sendDeliveryEmailAction(
       result.reason === "no-email"
         ? "Este cliente no tiene correo registrado. Agrégalo en su ficha y reintenta."
         : result.reason === "not-configured"
-          ? "El envío de correos no está configurado (falta RESEND_API_KEY en .env.local)."
+          ? "El envío de correos no está configurado (faltan las variables SMTP en el archivo .env)."
           : "El proveedor de correo rechazó el envío. Intenta de nuevo en unos minutos.";
     return { ok: false, message };
   }

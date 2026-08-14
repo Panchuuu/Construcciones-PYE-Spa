@@ -4,6 +4,7 @@ import {
   ClipboardCheck,
   ClipboardPlus,
   HardHat,
+  Inbox,
   UserPlus,
   Users,
 } from "lucide-react";
@@ -16,6 +17,7 @@ import {
   AdminPageHeader,
   DeliveryTypeBadge,
   EmptyState,
+  QuoteStatusBadge,
   formatDateShort,
 } from "@/frontend/admin/ui";
 
@@ -24,9 +26,9 @@ export default async function AdminDashboardPage() {
   const data = await getDashboard();
 
   const stats = [
+    { label: "Cotizaciones nuevas", value: data.newQuotes, icon: Inbox, href: "/admin/cotizaciones?estado=nueva" },
     { label: "Clientes", value: data.clients, icon: Users, href: "/admin/clientes" },
     { label: "Trabajos en progreso", value: data.worksInProgress, icon: HardHat, href: "/admin/trabajos" },
-    { label: "Trabajos entregados", value: data.worksDone, icon: HardHat, href: "/admin/trabajos" },
     { label: "Actas de entrega", value: data.deliveries, icon: ClipboardCheck, href: "/admin/entregas" },
   ];
 
@@ -78,6 +80,51 @@ export default async function AdminDashboardPage() {
           </Link>
         ))}
       </dl>
+
+      {/* Últimas cotizaciones */}
+      <section>
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-lg font-bold text-carbon-900">
+            Últimas cotizaciones
+          </h2>
+          <Link
+            href="/admin/cotizaciones"
+            className="inline-flex items-center gap-1 text-sm font-bold text-brand-700 hover:text-brand-600"
+          >
+            Ver todas
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="mt-4">
+          {data.recentQuotes.length === 0 ? (
+            <EmptyState
+              title="Aún no llegan cotizaciones"
+              description="Cuando alguien envíe el formulario de contacto del sitio, su solicitud aparecerá aquí."
+            />
+          ) : (
+            <ul className="divide-y divide-carbon-100 overflow-hidden rounded-2xl border border-carbon-200 bg-white shadow-card">
+              {data.recentQuotes.map((quote) => (
+                <li key={quote.id}>
+                  <Link
+                    href={`/admin/cotizaciones/${quote.id}`}
+                    className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-4 transition-colors hover:bg-carbon-50"
+                  >
+                    <span className="min-w-0 flex-1 truncate text-sm text-carbon-700">
+                      <span className="font-semibold">{quote.name}</span> —{" "}
+                      {quote.service}
+                    </span>
+                    <QuoteStatusBadge status={quote.status} />
+                    <span className="text-xs text-carbon-500">
+                      {formatDateShort(quote.createdAt)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
 
       {/* Últimas actas */}
       <section>

@@ -3,8 +3,10 @@ import Link from "next/link";
 import { cn } from "@/frontend/lib/utils";
 import {
   DELIVERY_TYPES,
+  QUOTE_STATUSES,
   WORK_STATUSES,
   type DeliveryType,
+  type QuoteStatus,
   type WorkStatus,
 } from "@/backend/schemas/admin.schema";
 
@@ -160,6 +162,30 @@ export function DeliveryTypeBadge({ type }: { type: string }) {
           : "bg-brand-50 text-brand-800",
       )}
     >
+      {label}
+    </span>
+  );
+}
+
+export function QuoteStatusBadge({ status }: { status: string }) {
+  const label = QUOTE_STATUSES[status as QuoteStatus] ?? status;
+  const styles =
+    status === "nueva"
+      ? { pill: "bg-brand-50 text-brand-800", dot: "bg-brand-600" }
+      : status === "contactada"
+        ? { pill: "bg-amber-100 text-amber-800", dot: "bg-amber-500" }
+        : { pill: "bg-green-100 text-green-800", dot: "bg-green-600" };
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold",
+        styles.pill,
+      )}
+    >
+      <span
+        className={cn("h-1.5 w-1.5 rounded-full", styles.dot)}
+        aria-hidden="true"
+      />
       {label}
     </span>
   );

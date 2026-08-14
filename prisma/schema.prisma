@@ -49,6 +49,20 @@ model Work {
   deliveries  Delivery[]
 }
 
+/// Solicitudes de cotización recibidas desde el formulario del sitio.
+/// Se guardan SIEMPRE (aunque el correo falle) para que no se pierdan.
+model QuoteRequest {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  service   String
+  location  String?
+  message   String
+  status    String   @default("nueva") // nueva | contactada | cerrada
+  createdAt DateTime @default(now())
+}
+
 /// Actas de entrega conforme (de trabajo o de materiales),
 /// firmadas en pantalla por ambas partes.
 model Delivery {

@@ -99,6 +99,14 @@ export const deliverySchema = z
 
 export type DeliveryInput = z.infer<typeof deliverySchema>;
 
+export const QUOTE_STATUSES = {
+  nueva: "Nueva",
+  contactada: "Contactada",
+  cerrada: "Cerrada",
+} as const;
+
+export type QuoteStatus = keyof typeof QUOTE_STATUSES;
+
 /** Convierte los issues de Zod en un mapa campo → primer error. */
 export function toFieldErrors(error: z.ZodError): Record<string, string> {
   const fieldErrors: Record<string, string> = {};

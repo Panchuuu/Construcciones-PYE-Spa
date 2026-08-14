@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 /* eslint-disable @next/next/no-img-element -- las firmas son data URLs locales */
-import { ArrowLeft, CheckCircle2, MessageCircle, XCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  FileDown,
+  MessageCircle,
+  XCircle,
+} from "lucide-react";
 
 import { deleteDeliveryAction } from "@/backend/actions/admin.actions";
 import { requireAdmin } from "@/backend/auth/session";
@@ -79,15 +85,24 @@ export default async function EntregaPage({
           deliveryId={delivery.id}
           hasClientEmail={Boolean(client.email)}
         />
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1fb457]"
-        >
-          <MessageCircle className="h-4 w-4" aria-hidden="true" />
-          Enviar por WhatsApp
-        </a>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href={`/admin/entregas/${delivery.id}/pdf`}
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-carbon-200 bg-white px-4 py-2.5 text-sm font-bold text-carbon-900 transition-colors hover:border-carbon-900"
+          >
+            <FileDown className="h-4 w-4" aria-hidden="true" />
+            Descargar PDF
+          </a>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1fb457]"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            Enviar por WhatsApp
+          </a>
+        </div>
       </div>
 
       {/* ── El acta (también es la vista de impresión) ─────────── */}
