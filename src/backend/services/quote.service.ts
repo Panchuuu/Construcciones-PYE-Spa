@@ -15,8 +15,8 @@ function escapeHtml(value: string) {
 function row(label: string, value: string) {
   return `
     <tr>
-      <td style="padding:10px 16px;background:#f6f7f9;font:600 13px/1.4 Arial,sans-serif;color:#4f5b73;width:150px;vertical-align:top">${label}</td>
-      <td style="padding:10px 16px;font:400 14px/1.5 Arial,sans-serif;color:#1d222c">${escapeHtml(value)}</td>
+      <td style="padding:10px 16px;background:#f5f7fa;font:600 13px/1.4 Arial,sans-serif;color:#455571;width:150px;vertical-align:top">${label}</td>
+      <td style="padding:10px 16px;font:400 14px/1.5 Arial,sans-serif;color:#1a2032">${escapeHtml(value)}</td>
     </tr>`;
 }
 
@@ -47,14 +47,14 @@ export async function submitQuoteRequest(
   ].join("\n");
 
   const html = `
-  <div style="background:#eceef2;padding:28px 12px">
-    <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #d5d9e2">
+  <div style="background:#eaeef5;padding:28px 12px">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #d3dae7">
       <tr>
-        <td style="background:#0e1116;padding:22px 24px">
+        <td style="background:#0d1220;padding:22px 24px">
           <p style="margin:0;font:800 18px/1.2 Arial,sans-serif;color:#ffffff">
             Nueva solicitud de cotización
           </p>
-          <p style="margin:6px 0 0;font:600 12px/1.4 Arial,sans-serif;color:#f5a800;letter-spacing:.14em;text-transform:uppercase">
+          <p style="margin:6px 0 0;font:600 12px/1.4 Arial,sans-serif;color:#d1322d;letter-spacing:.14em;text-transform:uppercase">
             ${escapeHtml(site.legalName)}
           </p>
         </td>
@@ -73,11 +73,11 @@ export async function submitQuoteRequest(
       </tr>
       <tr>
         <td style="padding:8px 24px 24px">
-          <p style="margin:0 0 8px;font:700 13px/1.4 Arial,sans-serif;color:#4f5b73">MENSAJE</p>
-          <div style="padding:16px;background:#f6f7f9;border-left:4px solid #f5a800;border-radius:8px;font:400 14px/1.6 Arial,sans-serif;color:#1d222c;white-space:pre-wrap">${escapeHtml(
+          <p style="margin:0 0 8px;font:700 13px/1.4 Arial,sans-serif;color:#455571">MENSAJE</p>
+          <div style="padding:16px;background:#f5f7fa;border-left:4px solid #d1322d;border-radius:8px;font:400 14px/1.6 Arial,sans-serif;color:#1a2032;white-space:pre-wrap">${escapeHtml(
             input.message,
           )}</div>
-          <p style="margin:20px 0 0;font:400 12px/1.5 Arial,sans-serif;color:#8491a8">
+          <p style="margin:20px 0 0;font:400 12px/1.5 Arial,sans-serif;color:#7e91b0">
             Responde directamente a este correo para contactar a ${escapeHtml(input.name)}.
           </p>
         </td>

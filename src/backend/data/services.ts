@@ -8,6 +8,7 @@
  */
 
 export type ServiceIcon =
+  | "hojalateria"
   | "obra-gruesa"
   | "edificacion"
   | "remodelacion"
@@ -24,6 +25,19 @@ export type Service = {
 };
 
 export const services: Service[] = [
+  {
+    slug: "hojalateria",
+    title: "Hojalatería y techumbres",
+    summary:
+      "Nuestra especialidad: fabricación e instalación de cubiertas, canales, bajadas de aguas lluvia y forros a medida.",
+    icon: "hojalateria",
+    bullets: [
+      "Cubiertas y reparación de techumbres",
+      "Canales y bajadas de aguas lluvia",
+      "Forros, remates y caballetes",
+      "Fabricación a medida en obra",
+    ],
+  },
   {
     slug: "obra-gruesa",
     title: "Obra gruesa",

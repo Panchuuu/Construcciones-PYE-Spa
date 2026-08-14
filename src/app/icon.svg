@@ -1,5 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
-  <rect width="40" height="40" rx="9" fill="#f5a800"/>
-  <path d="M8 27.5 15.2 12h3.9l7.2 15.5h-4.2l-1.3-3h-7.3l-1.3 3H8Zm6.6-6.3h4.9l-2.45-5.6-2.45 5.6Z" fill="#0e1116"/>
-  <path d="M25.5 27.5V21l-2.1-4.4h3.6l1.4 3.2 1.4-3.2H33L30.9 21v6.5h-5.4Z" fill="#0e1116" opacity="0.85"/>
+  <rect width="40" height="40" rx="9" fill="#1a2032"/>
+  <path d="M4 27l7-7 7 7" stroke="#d1322d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="8" y="28.5" width="2.6" height="3" fill="#ffffff"/>
+  <rect x="11.8" y="28.5" width="2.6" height="3" fill="#ffffff"/>
+  <path d="M14 28 25 17l11 11" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M18 27.5l7-7 3.2 3.2" stroke="#d1322d" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M20.5 20V14.5h3V17" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="22.5" y="29.5" width="2.8" height="3.4" fill="#ffffff"/>
+  <rect x="26.8" y="29.5" width="2.8" height="3.4" fill="#ffffff"/>
 </svg>

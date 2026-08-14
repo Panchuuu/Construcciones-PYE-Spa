@@ -13,9 +13,9 @@ export const site = {
   shortName: "PYE",
   /** ⚠️ REEMPLAZAR — RUT de la empresa */
   rut: "77.XXX.XXX-X",
-  tagline: "Construimos con estándar, plazo y palabra.",
+  tagline: "Fabricación & Montaje",
   description:
-    "Empresa constructora chilena especializada en obra gruesa, edificación, remodelación y montaje industrial. Ejecutamos proyectos con planificación rigurosa, seguridad certificada y entrega en plazo.",
+    "Empresa constructora chilena especializada en hojalatería, techumbres, obra gruesa, edificación, remodelación y montaje. Ejecutamos proyectos con planificación rigurosa, seguridad certificada y entrega en plazo.",
 
   /** URL final del sitio (se usa en SEO, sitemap y Open Graph) */
   /** ⚠️ REEMPLAZAR cuando tengas el dominio definitivo */

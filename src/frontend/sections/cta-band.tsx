@@ -18,7 +18,7 @@ export function CtaBand({
         className="absolute inset-0 opacity-10"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(45deg, #0e1116 0 2px, transparent 2px 22px)",
+            "repeating-linear-gradient(45deg, #0d1220 0 2px, transparent 2px 22px)",
         }}
       />
 
@@ -28,7 +28,7 @@ export function CtaBand({
             <h2 className="title-xl text-3xl text-carbon-950 sm:text-4xl">
               {title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-carbon-900/80 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-carbon-950 sm:text-lg">
               {description}
             </p>
           </div>

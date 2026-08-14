@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600" role="img" aria-label="Galpon industrial">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#414a5e"/>
-      <stop offset="100%" stop-color="#0e1116"/>
+      <stop offset="0%" stop-color="#39445d"/>
+      <stop offset="100%" stop-color="#0d1220"/>
     </linearGradient>
     <pattern id="plano" width="45" height="45" patternUnits="userSpaceOnUse">
       <path d="M45 0H0v45" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.06"/>
@@ -10,14 +10,14 @@
   </defs>
   <rect width="900" height="600" fill="url(#sky)"/>
   <rect width="900" height="600" fill="url(#plano)"/>
-  <circle cx="740" cy="140" r="70" fill="#f5a800" opacity="0.16"/>
+  <circle cx="740" cy="140" r="70" fill="#d1322d" opacity="0.16"/>
   
-    <path d="M140 540V300l260-90 260 90v240Z" fill="#272d3a"/>
-    <path d="M140 300l260-90 260 90" fill="none" stroke="#f5a800" stroke-width="10" opacity="0.8"/>
-    <rect x="330" y="400" width="140" height="140" fill="#0e1116"/>
-    <rect x="180" y="340" width="90" height="60" fill="#1d222c"/>
-    <rect x="530" y="340" width="90" height="60" fill="#1d222c"/>
-    <rect x="690" y="380" width="170" height="160" fill="#1d222c"/>
-  <rect y="540" width="900" height="60" fill="#0e1116"/>
-  <rect y="536" width="900" height="6" fill="#f5a800" opacity="0.9"/>
+    <path d="M140 540V300l260-90 260 90v240Z" fill="#242c42"/>
+    <path d="M140 300l260-90 260 90" fill="none" stroke="#d1322d" stroke-width="10" opacity="0.8"/>
+    <rect x="330" y="400" width="140" height="140" fill="#0d1220"/>
+    <rect x="180" y="340" width="90" height="60" fill="#1a2032"/>
+    <rect x="530" y="340" width="90" height="60" fill="#1a2032"/>
+    <rect x="690" y="380" width="170" height="160" fill="#1a2032"/>
+  <rect y="540" width="900" height="60" fill="#0d1220"/>
+  <rect y="536" width="900" height="6" fill="#d1322d" opacity="0.9"/>
 </svg>

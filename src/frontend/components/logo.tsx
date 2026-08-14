@@ -1,10 +1,11 @@
 import { cn } from "@/frontend/lib/utils";
-import { site } from "@/backend/config/site";
 
 /**
- * Isotipo + logotipo de la empresa.
- * ⚠️ Si tienen un logo oficial, reemplaza el <svg> por:
- *    <Image src="/logo.svg" alt="Construcciones PYE" width={160} height={40} />
+ * Isotipo + logotipo, dibujado a partir del logo bordado de la empresa:
+ * casita de techo rojo a la izquierda, techumbre grande con chimenea
+ * humeante a la derecha, y el nombre "Construcciones Hojalatería PYE".
+ * ⚠️ Si más adelante tienen el logo en archivo vectorial, reemplaza el <svg>
+ *    por <Image src="/logo.svg" ... />.
  */
 export function Logo({
   className,
@@ -14,45 +15,68 @@ export function Logo({
   variant?: "dark" | "light";
 }) {
   const isLight = variant === "light";
+  /** Trazo principal: blanco sobre fondos oscuros, azul marino sobre claros */
+  const main = isLight ? "#ffffff" : "var(--color-carbon-900)";
+  const accent = "var(--color-brand-600)";
 
   return (
-    <span className={cn("flex items-center gap-2.5", className)}>
+    <span className={cn("flex items-center gap-3", className)}>
       <svg
-        viewBox="0 0 40 40"
+        viewBox="0 0 58 42"
         aria-hidden="true"
-        className="h-9 w-9 shrink-0 sm:h-10 sm:w-10"
+        className="h-10 w-auto shrink-0 sm:h-11"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
-        <rect width="40" height="40" rx="9" fill="var(--color-brand-500)" />
-        <path
-          d="M8 27.5 15.2 12h3.9l7.2 15.5h-4.2l-1.3-3h-7.3l-1.3 3H8Zm6.6-6.3h4.9l-2.45-5.6-2.45 5.6Z"
-          fill="var(--color-carbon-950)"
-        />
-        <path
-          d="M25.5 27.5V21l-2.1-4.4h3.6l1.4 3.2 1.4-3.2H33L30.9 21v6.5h-5.4Z"
-          fill="var(--color-carbon-950)"
-          opacity="0.85"
-        />
+        {/* Casita izquierda: techo rojo y ventanas */}
+        <path d="M2 27 12 17l10 10" stroke={accent} strokeWidth="2.8" />
+        <rect x="8" y="29" width="3.4" height="4" fill={main} />
+        <rect x="13" y="29" width="3.4" height="4" fill={main} />
+
+        {/* Techumbre grande: trazo principal con línea roja interior */}
+        <path d="M18 28 34 12l16 16" stroke={main} strokeWidth="3" />
+        <path d="M23 27.5 34 16.5l4.5 4.5" stroke={accent} strokeWidth="2.2" />
+
+        {/* Chimenea con humo sobre el faldón izquierdo */}
+        <path d="M27 16.5V9h4v3.5" stroke={main} strokeWidth="2.4" />
+        <path d="M29.5 6.5c1.8-.6 1.2-2.4 2.6-3" stroke={main} strokeWidth="1.6" />
+
+        {/* Ventanas de la casa grande */}
+        <rect x="31" y="30" width="3.6" height="4.4" fill={main} />
+        <rect x="36.6" y="30" width="3.6" height="4.4" fill={main} />
+
+        {/* Faldón descendente a la derecha */}
+        <path d="M50 28l4-4 4 4" stroke={main} strokeWidth="2.4" />
       </svg>
 
-      <span className="flex flex-col leading-none">
+      <span className="flex flex-col leading-tight">
         <span
           className={cn(
-            "font-display text-[0.95rem] font-extrabold uppercase tracking-tight sm:text-lg",
-            isLight ? "text-white" : "text-carbon-900",
+            "font-display text-[0.58rem] font-bold uppercase tracking-[0.26em] sm:text-[0.65rem]",
+            isLight ? "text-carbon-300" : "text-carbon-600",
           )}
         >
           Construcciones
         </span>
         <span
           className={cn(
-            "font-display text-[0.95rem] font-extrabold uppercase tracking-[0.32em] sm:text-lg",
-            isLight ? "text-brand-500" : "text-brand-600",
+            "font-display text-[0.92rem] font-extrabold uppercase tracking-tight sm:text-base",
+            isLight ? "text-white" : "text-carbon-900",
           )}
         >
-          {site.shortName}
-          <span className="ml-1 text-[0.6em] tracking-normal opacity-70">
-            SpA
+          Hojalatería{" "}
+          <span className={isLight ? "text-brand-500" : "text-brand-600"}>
+            PYE
           </span>
+        </span>
+        <span
+          className={cn(
+            "font-display text-[0.5rem] font-semibold uppercase tracking-[0.24em] sm:text-[0.55rem]",
+            isLight ? "text-carbon-400" : "text-carbon-500",
+          )}
+        >
+          Fabricación &amp; Montaje
         </span>
       </span>
     </span>

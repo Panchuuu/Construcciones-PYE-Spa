@@ -29,6 +29,8 @@ export const metadata: Metadata = {
   keywords: [
     "constructora",
     "empresa constructora",
+    "hojalatería",
+    "techumbres",
     "obra gruesa",
     "remodelación",
     "montaje industrial",
@@ -53,7 +55,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0e1116",
+  themeColor: "#0d1220",
 };
 
 /** Datos estructurados para que Google entienda de qué empresa se trata */
