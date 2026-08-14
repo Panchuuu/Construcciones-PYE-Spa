@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Marca ─────────────────────────────────────────────── */
+  --color-brand-50: #fffbeb;
+  --color-brand-100: #fef3c7;
+  --color-brand-200: #fde68a;
+  --color-brand-300: #fcd34d;
+  --color-brand-400: #fbbf24;
+  --color-brand-500: #f5a800; /* amarillo seguridad — color principal */
+  --color-brand-600: #d98a00;
+  --color-brand-700: #b36a04;
+  --color-brand-800: #92530b;
+  --color-brand-900: #78440c;
+
+  /* ── Carbón / estructura ───────────────────────────────── */
+  --color-carbon-50: #f6f7f9;
+  --color-carbon-100: #eceef2;
+  --color-carbon-200: #d5d9e2;
+  --color-carbon-300: #b0b8c8;
+  --color-carbon-400: #8491a8;
+  --color-carbon-500: #64738d;
+  --color-carbon-600: #4f5b73;
+  --color-carbon-700: #414a5e;
+  --color-carbon-800: #383f4f;
+  --color-carbon-900: #1d222c;
+  --color-carbon-950: #0e1116;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px rgb(14 17 22 / 0.04), 0 12px 32px -12px rgb(14 17 22 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(14 17 22 / 0.06), 0 24px 48px -20px rgb(14 17 22 / 0.28);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-carbon-900);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* compensa el header fijo al saltar a un #ancla */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--color-brand-500);
+  color: var(--color-carbon-950);
+}
+
+/* Títulos: displays condensados y apretados */
+.title-xl {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Etiqueta pequeña sobre los títulos de sección */
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Franja diagonal tipo señalética de obra */
+.hazard-stripe {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-brand-500) 0 12px,
+    var(--color-carbon-950) 12px 24px
+  );
+}
+
+/* ── Animación de entrada al hacer scroll ─────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
