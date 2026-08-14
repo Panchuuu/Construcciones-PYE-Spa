@@ -1,0 +1,73 @@
+// Esquema de la base de datos del panel de administración.
+// Tras editarlo: npx prisma migrate dev --name <nombre-del-cambio>
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// Usuarios con acceso al panel (/admin).
+/// Se crean con: npm run admin:crear
+model Admin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+/// Clientes de la constructora.
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  rut       String?
+  company   String?
+  email     String?
+  phone     String?
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  works     Work[]
+}
+
+/// Trabajos/obras asociados a un cliente.
+model Work {
+  id          String     @id @default(cuid())
+  clientId    String
+  client      Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  location    String?
+  status      String     @default("en_progreso") // en_progreso | entregado
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deliveries  Delivery[]
+}
+
+/// Actas de entrega conforme (de trabajo o de materiales),
+/// firmadas en pantalla por ambas partes.
+model Delivery {
+  id                String    @id @default(cuid())
+  folio             Int       @unique
+  workId            String
+  work              Work      @relation(fields: [workId], references: [id], onDelete: Cascade)
+  type              String // trabajo | materiales
+  date              DateTime  @default(now())
+  notes             String?
+  /// Solo entregas de materiales: JSON [{descripcion, cantidad, unidad}]
+  itemsJson         String?
+  companySignerName String
+  clientSignerName  String
+  clientSignerRut   String?
+  /// Firmas dibujadas en pantalla, como imagen PNG (data URL)
+  companySignature  String
+  clientSignature   String
+  receivedOk        Boolean   @default(true)
+  emailSentAt       DateTime?
+  createdAt         DateTime  @default(now())
+}

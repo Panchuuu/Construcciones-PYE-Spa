@@ -7,14 +7,16 @@ Desarrollado por **Panchuuu**.
 
 ## Stack
 
-| Capa       | Tecnología                                     |
-| ---------- | ---------------------------------------------- |
-| Framework  | Next.js 16 (App Router) + React 19             |
-| Lenguaje   | TypeScript (modo estricto)                     |
-| Estilos    | Tailwind CSS 4 (tema propio con tokens)        |
-| Íconos     | lucide-react                                   |
-| Validación | Zod (compartida entre cliente y servidor)      |
-| Correo     | Resend                                         |
+| Capa          | Tecnología                                     |
+| ------------- | ---------------------------------------------- |
+| Framework     | Next.js 16 (App Router) + React 19             |
+| Lenguaje      | TypeScript (modo estricto)                     |
+| Estilos       | Tailwind CSS 4 (tema propio con tokens)        |
+| Íconos        | lucide-react                                   |
+| Validación    | Zod (compartida entre cliente y servidor)      |
+| Correo        | Resend                                         |
+| Base de datos | SQLite + Prisma 7 (panel de administración)    |
+| Sesiones      | JWT firmado (jose) + bcryptjs                  |
 
 ---
 
@@ -122,6 +124,55 @@ Para que los correos se envíen de verdad:
 Mientras no haya API key configurada, el formulario **avisa honestamente** al
 visitante que el envío no está disponible y le ofrece WhatsApp como
 alternativa; nunca finge haber enviado el mensaje.
+
+---
+
+## Panel de administración (`/admin`)
+
+Panel interno con credenciales para que la empresa registre sus **entregas
+conformes**:
+
+- **Clientes** — datos personales y de contacto.
+- **Trabajos** — obras/servicios asociados a cada cliente, con estado.
+- **Actas de entrega** — de *trabajo* o de *materiales* (con lista detallada),
+  **firmadas en pantalla** por el representante de la empresa y el cliente al
+  momento de la entrega. Cada acta recibe un folio correlativo (N° 001, 002…).
+- **Envío del detalle** — por correo (Resend) al cliente, por WhatsApp con el
+  resumen precargado, o impresión/PDF del acta con las firmas.
+
+### Crear un administrador
+
+```bash
+npm run admin:crear -- "Nombre Apellido" correo@ejemplo.cl "contraseña-segura"
+```
+
+Si el correo ya existe, se actualiza su contraseña. Luego se ingresa en
+`/admin/login` (hay un enlace discreto "Acceso administradores" en el footer).
+
+### Base de datos
+
+Los datos viven en `prisma/data.db` (SQLite), **fuera del repositorio**.
+Comandos útiles:
+
+```bash
+npm run db:migrar    # aplicar cambios del esquema (prisma migrate dev)
+npm run db:estudio   # explorar los datos en el navegador (prisma studio)
+```
+
+> ⚠️ **Antes de publicar en Vercel**: SQLite guarda los datos en un archivo
+> local, que en Vercel se pierde en cada deploy. Para producción hay que
+> migrar a Postgres (Neon/Supabase): cambiar el `provider` del
+> `prisma/schema.prisma`, la `DATABASE_URL` y el adaptador en
+> `src/backend/db/prisma.ts`. El resto del código no cambia.
+> Alternativa: alojar el sitio en un VPS, donde SQLite funciona bien.
+
+### Seguridad
+
+- Sesiones JWT en cookie `httpOnly` (12 h), firmadas con `AUTH_SECRET`.
+- Contraseñas con bcrypt (12 rondas).
+- Doble barrera: `src/proxy.ts` corta el acceso a `/admin/*` sin sesión, y
+  cada página/acción vuelve a validar con `requireAdmin()`.
+- Límite de intentos de login por IP.
 
 ---
 

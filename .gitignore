@@ -42,3 +42,16 @@ next-env.d.ts
 
 # el archivo de ejemplo sí se versiona (no contiene secretos)
 !.env.example
+
+/src/generated/prisma
+
+# Base de datos SQLite local y cliente Prisma generado
+prisma/*.db
+prisma/*.db-journal
+/src/generated/
+
+# Documentacion de agentes que instala Prisma (artefactos locales)
+.claude/skills/
+.windsurf/
+.agents/
+skills-lock.json

@@ -25,11 +25,14 @@ export async function sendMail({
   html,
   text,
   replyTo,
+  to,
 }: {
   subject: string;
   html: string;
   text: string;
   replyTo?: string;
+  /** Destinatario; si se omite, va al correo de la empresa. */
+  to?: string;
 }): Promise<SendResult> {
   if (!isMailConfigured) {
     if (!env.isProduction) {
@@ -44,7 +47,7 @@ export async function sendMail({
   try {
     const { error } = await getClient().emails.send({
       from: env.contactFromEmail,
-      to: [env.contactToEmail],
+      to: [to ?? env.contactToEmail],
       subject,
       html,
       text,

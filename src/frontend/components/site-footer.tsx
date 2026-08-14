@@ -118,6 +118,12 @@ export function SiteFooter() {
           <p>
             Cobertura: {site.coverage.slice(0, 3).join(" · ")} y más regiones.
           </p>
+          <Link
+            href="/admin"
+            className="transition-colors hover:text-brand-500"
+          >
+            Acceso administradores
+          </Link>
         </div>
       </div>
     </footer>
