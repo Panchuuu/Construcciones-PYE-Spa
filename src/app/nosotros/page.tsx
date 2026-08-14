@@ -2,24 +2,22 @@ import type { Metadata } from "next";
 import { Target, Eye } from "lucide-react";
 
 import { milestones, values } from "@/backend/data/company";
-import { site, stats } from "@/backend/config/site";
+import { site, stats, yearsOfExperience } from "@/backend/config/site";
 import { Container, PageHero, SectionHeading } from "@/frontend/components/ui";
 import { Reveal } from "@/frontend/components/reveal";
 import { CtaBand } from "@/frontend/sections/cta-band";
 
 export const metadata: Metadata = {
   title: "Nosotros",
-  description: `Conoce a ${site.legalName}: equipo, valores e historia de una constructora chilena con más de ${new Date().getFullYear() - site.foundedYear} años de trayectoria.`,
+  description: `Conoce a ${site.legalName}: equipo, valores e historia de una constructora chilena con ${yearsOfExperience} años de trayectoria.`,
 };
 
 export default function NosotrosPage() {
-  const years = new Date().getFullYear() - site.foundedYear;
-
   return (
     <>
       <PageHero
         eyebrow="Nosotros"
-        title={`${years} años construyendo con la misma exigencia`}
+        title={`${yearsOfExperience} años construyendo con la misma exigencia`}
         description={`${site.legalName} nació en ${site.foundedYear} con una idea simple: entregar obras bien hechas, en el plazo comprometido y sin letra chica.`}
       />
 

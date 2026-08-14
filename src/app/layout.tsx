@@ -74,6 +74,7 @@ const jsonLd = {
   },
   areaServed: site.coverage,
   foundingDate: String(site.foundedYear),
+  sameAs: Object.values(site.social).filter(Boolean),
 };
 
 export default function RootLayout({

@@ -6,6 +6,7 @@ import { site, whatsappUrl } from "@/backend/config/site";
 import { ButtonLink, Container, PageHero } from "@/frontend/components/ui";
 import { ContactForm } from "@/frontend/components/contact-form";
 import { Reveal } from "@/frontend/components/reveal";
+import { SocialLinks } from "@/frontend/components/social-links";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -105,6 +106,13 @@ export default function ContactoPage() {
                   <MessageCircle className="h-4 w-4" aria-hidden="true" />
                   Escribir por WhatsApp
                 </ButtonLink>
+
+                <div className="mt-8 border-t border-white/10 pt-6">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-carbon-400">
+                    Síguenos
+                  </p>
+                  <SocialLinks className="mt-3" />
+                </div>
               </div>
 
               <div className="rounded-2xl border border-carbon-200 bg-white p-8">

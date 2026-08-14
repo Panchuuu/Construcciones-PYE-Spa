@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
 
 import { Logo } from "@/frontend/components/logo";
+import { SocialLinks } from "@/frontend/components/social-links";
 import { navigation, site } from "@/backend/config/site";
 import { services } from "@/backend/data/services";
 
@@ -19,7 +20,8 @@ export function SiteFooter() {
             <p className="mt-5 max-w-xs text-sm leading-relaxed">
               {site.description}
             </p>
-            <p className="mt-5 text-xs text-carbon-500">RUT {site.rut}</p>
+            <SocialLinks className="mt-6" />
+            <p className="mt-6 text-xs text-carbon-500">RUT {site.rut}</p>
           </div>
 
           <div>

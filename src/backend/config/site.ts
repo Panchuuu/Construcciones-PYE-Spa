@@ -21,17 +21,15 @@ export const site = {
   /** ⚠️ REEMPLAZAR cuando tengas el dominio definitivo */
   url: "https://construccionespye.cl",
 
-  foundedYear: 2015,
+  foundedYear: 2022,
 
   contact: {
-    /** ⚠️ REEMPLAZAR — formato internacional, sin espacios */
-    phone: "+56912345678",
-    phoneDisplay: "+56 9 1234 5678",
+    phone: "+56954249184",
+    phoneDisplay: "+56 9 5424 9184",
     /** Número de WhatsApp en formato internacional sin "+" ni espacios */
-    whatsapp: "56912345678",
-    /** ⚠️ REEMPLAZAR */
-    email: "contacto@construccionespye.cl",
-    /** ⚠️ REEMPLAZAR */
+    whatsapp: "56954249184",
+    email: "construccionespyespa@gmail.com",
+    /** ⚠️ REEMPLAZAR — dirección de la oficina (o dejar en "" para ocultarla) */
     address: "Av. Ejemplo 1234, Oficina 56",
     city: "Santiago",
     region: "Región Metropolitana",
@@ -39,11 +37,11 @@ export const site = {
     hours: "Lunes a viernes, 08:30 – 18:30 hrs",
   },
 
+  /** Deja una red en "" para que no aparezca su ícono en el sitio. */
   social: {
-    /** ⚠️ REEMPLAZAR o dejar en "" para ocultar el ícono */
-    instagram: "https://instagram.com/",
-    facebook: "https://facebook.com/",
-    linkedin: "https://linkedin.com/",
+    instagram: "https://www.instagram.com/construccionesparra/",
+    facebook: "",
+    linkedin: "",
   },
 
   /** Áreas geográficas donde opera la empresa */
@@ -56,10 +54,17 @@ export const site = {
   ],
 } as const;
 
+/** Años de trayectoria, calculados solos para que nunca queden desactualizados. */
+export const yearsOfExperience = new Date().getFullYear() - site.foundedYear;
+
+/**
+ * ⚠️ CONFIRMAR las tres últimas cifras antes de publicar el sitio:
+ * son estimaciones provisorias, no datos reales de la empresa.
+ */
 export const stats = [
-  { value: "10+", label: "Años de experiencia" },
-  { value: "120+", label: "Proyectos entregados" },
-  { value: "85.000", label: "m² construidos" },
+  { value: `${yearsOfExperience}`, label: "Años de experiencia" },
+  { value: "40+", label: "Proyectos entregados" },
+  { value: "12.000", label: "m² construidos" },
   { value: "0", label: "Accidentes con tiempo perdido" },
 ] as const;
 

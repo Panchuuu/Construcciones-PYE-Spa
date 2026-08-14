@@ -72,28 +72,28 @@ export type Milestone = {
 
 export const milestones: Milestone[] = [
   {
-    year: "2015",
+    year: "2022",
     title: "Nace Construcciones PYE",
     description:
       "Partimos con proyectos de remodelación y ampliaciones en la Región Metropolitana.",
   },
   {
-    year: "2018",
-    title: "Primer proyecto de edificación",
+    year: "2023",
+    title: "Primeras obras de edificación",
     description:
-      "Ejecutamos nuestro primer edificio de departamentos y consolidamos el área de obra gruesa.",
+      "Consolidamos el área de obra gruesa y ejecutamos nuestros primeros proyectos de edificación completa.",
   },
   {
-    year: "2021",
+    year: "2024",
     title: "Área industrial",
     description:
       "Incorporamos montaje de estructuras metálicas y obras civiles para clientes industriales.",
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Expansión regional",
     description:
-      "Ampliamos la cobertura a cinco regiones con maquinaria y equipos propios.",
+      "Ampliamos la cobertura fuera de la Región Metropolitana con equipos y maquinaria propios.",
   },
 ];
 
