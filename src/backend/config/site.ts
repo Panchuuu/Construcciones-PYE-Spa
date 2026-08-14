@@ -11,8 +11,7 @@ export const site = {
   name: "Construcciones PYE",
   legalName: "Construcciones PYE SpA",
   shortName: "PYE",
-  /** ⚠️ REEMPLAZAR — RUT de la empresa */
-  rut: "77.XXX.XXX-X",
+  rut: "77.200.759-0",
   tagline: "Fabricación & Montaje",
   description:
     "Empresa constructora chilena especializada en hojalatería, techumbres, obra gruesa, edificación, remodelación y montaje. Ejecutamos proyectos con planificación rigurosa, seguridad certificada y entrega en plazo.",
@@ -29,8 +28,7 @@ export const site = {
     /** Número de WhatsApp en formato internacional sin "+" ni espacios */
     whatsapp: "56954249184",
     email: "construccionespyespa@gmail.com",
-    /** ⚠️ REEMPLAZAR — dirección de la oficina (o dejar en "" para ocultarla) */
-    address: "Av. Ejemplo 1234, Oficina 56",
+    address: "Las Torpederas 638, El Bosque",
     city: "Santiago",
     region: "Región Metropolitana",
     country: "Chile",
