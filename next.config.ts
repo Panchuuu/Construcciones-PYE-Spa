@@ -7,6 +7,21 @@ const nextConfig: NextConfig = {
    * celular). No afecta a producción.
    */
   allowedDevOrigins: ["*.devtunnels.ms"],
+
+  experimental: {
+    serverActions: {
+      /**
+       * Permite enviar formularios (Server Actions: login, actas, etc.)
+       * cuando el sitio se visita a través de un túnel o proxy.
+       */
+      allowedOrigins: ["*.devtunnels.ms"],
+      /**
+       * Las actas de entrega incluyen dos firmas como imagen PNG,
+       * por eso subimos el límite por defecto de 1 MB.
+       */
+      bodySizeLimit: "2mb",
+    },
+  },
 };
 
 export default nextConfig;
