@@ -1,11 +1,12 @@
 import { ArrowRight } from "lucide-react";
 
-import { projects } from "@/backend/data/projects";
+import { listPublicProjects } from "@/backend/services/projects.service";
 import { ButtonLink, Container, SectionHeading } from "@/frontend/components/ui";
 import { Reveal } from "@/frontend/components/reveal";
 import { ProjectCard } from "@/frontend/components/project-card";
 
-export function FeaturedProjects() {
+export async function FeaturedProjects() {
+  const projects = await listPublicProjects();
   const featured = projects.slice(0, 3);
 
   return (

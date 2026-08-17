@@ -68,6 +68,8 @@ npx prisma generate         # cliente Prisma (el postinstall falla en este
                             # hosting porque corre fuera del proyecto: ignorar
                             # su error y ejecutar esto a mano)
 npx prisma migrate deploy   # crea/actualiza las tablas en prisma/data.db
+npm run proyectos:importar  # carga los proyectos de ejemplo (solo la 1ª vez;
+                            # después se administran desde /admin/proyectos)
 npm run build               # compila el sitio para producción
 ```
 
@@ -121,5 +123,7 @@ y **Restart** en Setup Node.js App.
 ## Copias de seguridad
 
 Los datos del panel viven en **`~/construcciones-pye/prisma/data.db`**
-(no está en Git). Incluir ese archivo en los respaldos del hosting
-(JetBackup ya respalda el home, pero conviene verificarlo).
+(no está en Git). Ese archivo guarda clientes, trabajos, actas,
+cotizaciones **y las fotos de los proyectos**, así que es el respaldo
+más importante: incluirlo en las copias del hosting (JetBackup ya
+respalda el home, pero conviene verificarlo).

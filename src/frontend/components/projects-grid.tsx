@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import type { Project } from "@/backend/data/projects";
+import type { Project } from "@/backend/types/project";
 import { ProjectCard } from "@/frontend/components/project-card";
 import { cn } from "@/frontend/lib/utils";
 

@@ -8,6 +8,7 @@ import {
   type ActionState,
 } from "@/backend/actions/admin.actions";
 import { AdminField, fieldClass, fieldErrorClass } from "@/frontend/admin/ui";
+import { RutInput } from "@/frontend/admin/rut-input";
 import { cn } from "@/frontend/lib/utils";
 
 type ClientData = {
@@ -48,14 +49,16 @@ export function ClientForm({
           />
         </AdminField>
 
-        <AdminField label="RUT" name="rut" error={errors.rut}>
-          <input
-            id="rut"
+        <AdminField
+          label="RUT"
+          name="rut"
+          error={errors.rut}
+          hint="Con puntos y guion; acepta K como dígito verificador"
+        >
+          <RutInput
             name="rut"
-            type="text"
-            defaultValue={initial?.rut ?? ""}
-            placeholder="12.345.678-9"
-            className={cn(fieldClass, errors.rut && fieldErrorClass)}
+            defaultValue={initial?.rut}
+            hasError={Boolean(errors.rut)}
           />
         </AdminField>
       </div>

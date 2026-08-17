@@ -1,15 +1,24 @@
 import { z } from "zod";
 
+import { formatRut, isValidRut } from "@/backend/lib/rut";
+
 /** Contratos de datos del panel de administración. */
+
+/**
+ * RUT chileno opcional: si viene, debe tener dígito verificador válido
+ * (acepta K) y se guarda siempre con formato "12.345.678-5".
+ */
+const rutSchema = z
+  .string()
+  .trim()
+  .refine((value) => value === "" || isValidRut(value), {
+    message: "RUT no válido: revisa el número y el dígito verificador",
+  })
+  .transform((value) => (value === "" ? "" : formatRut(value)));
 
 export const clientSchema = z.object({
   name: z.string().trim().min(3, "Escribe el nombre del cliente").max(100),
-  rut: z
-    .string()
-    .trim()
-    .max(15, "RUT demasiado largo")
-    .optional()
-    .or(z.literal("")),
+  rut: rutSchema.optional(),
   company: z.string().trim().max(100).optional().or(z.literal("")),
   email: z
     .string()
@@ -84,7 +93,7 @@ export const deliverySchema = z
       .trim()
       .min(3, "Nombre de quien recibe")
       .max(100),
-    clientSignerRut: z.string().trim().max(15).optional().or(z.literal("")),
+    clientSignerRut: rutSchema.optional(),
     companySignature: signatureSchema,
     clientSignature: signatureSchema,
     receivedOk: z.boolean().default(true),
@@ -98,6 +107,56 @@ export const deliverySchema = z
   );
 
 export type DeliveryInput = z.infer<typeof deliverySchema>;
+
+/** Convierte un título en slug para la URL: "Galpón Lampa" → "galpon-lampa". */
+export function slugify(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // quita tildes
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+export const PROJECT_CATEGORIES = [
+  "Hojalatería",
+  "Techumbres",
+  "Edificación",
+  "Vivienda",
+  "Industrial",
+  "Remodelación",
+  "Obra gruesa",
+  "Montaje",
+] as const;
+
+const currentYear = new Date().getFullYear();
+
+export const projectSchema = z.object({
+  title: z.string().trim().min(3, "Escribe el nombre de la obra").max(120),
+  slug: z
+    .string()
+    .trim()
+    .max(80)
+    .optional()
+    .or(z.literal(""))
+    .transform((value) => value?.trim() ?? ""),
+  category: z.string().trim().min(3, "Indica la categoría").max(40),
+  location: z.string().trim().min(3, "Indica la ubicación").max(120),
+  year: z.coerce
+    .number()
+    .int("El año debe ser un número")
+    .min(1990, "Año demasiado antiguo")
+    .max(currentYear + 1, "Año demasiado lejano"),
+  surface: z.string().trim().min(1, "Indica la superficie").max(40),
+  duration: z.string().trim().min(1, "Indica la duración").max(40),
+  client: z.string().trim().min(2, "Indica el mandante").max(120),
+  summary: z.string().trim().min(20, "Describe la obra").max(1000),
+  /** Un hito por línea en el formulario. */
+  scope: z.array(z.string().trim().min(1).max(200)).default([]),
+});
+
+export type ProjectInput = z.infer<typeof projectSchema>;
 
 export const QUOTE_STATUSES = {
   nueva: "Nueva",

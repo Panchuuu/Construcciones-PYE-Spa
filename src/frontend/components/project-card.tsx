@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, MapPin, Ruler } from "lucide-react";
 
-import type { Project } from "@/backend/data/projects";
+import type { Project } from "@/backend/types/project";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (

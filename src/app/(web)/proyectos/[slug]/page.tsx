@@ -4,7 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Building2, CalendarDays, Check, Clock, MapPin, Ruler } from "lucide-react";
 
-import { getProject, projects } from "@/backend/data/projects";
+import {
+  getPublicProject,
+  listPublicProjects,
+} from "@/backend/services/projects.service";
 import { Container } from "@/frontend/components/ui";
 import { ProjectCard } from "@/frontend/components/project-card";
 import { CtaBand } from "@/frontend/sections/cta-band";
@@ -12,13 +15,14 @@ import { CtaBand } from "@/frontend/sections/cta-band";
 type Params = { params: Promise<{ slug: string }> };
 
 /** Pre-genera una página estática por cada obra. */
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const projects = await listPublicProjects();
   return projects.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getPublicProject(slug);
 
   if (!project) return { title: "Proyecto no encontrado" };
 
@@ -35,11 +39,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ProyectoPage({ params }: Params) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getPublicProject(slug);
 
   if (!project) notFound();
 
-  const related = projects
+  const all = await listPublicProjects();
+  const related = all
     .filter((p) => p.slug !== project.slug && p.category === project.category)
     .slice(0, 3);
 

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
-import { projectCategories, projects } from "@/backend/data/projects";
+import {
+  listCategories,
+  listPublicProjects,
+} from "@/backend/services/projects.service";
 import { Container, PageHero } from "@/frontend/components/ui";
 import { ProjectsGrid } from "@/frontend/components/projects-grid";
 import { CtaBand } from "@/frontend/sections/cta-band";
@@ -11,7 +14,12 @@ export const metadata: Metadata = {
     "Obras de edificación, vivienda, industria y remodelación ejecutadas por Construcciones PYE en Chile.",
 };
 
-export default function ProyectosPage() {
+export default async function ProyectosPage() {
+  const [projects, projectCategories] = await Promise.all([
+    listPublicProjects(),
+    listCategories(),
+  ]);
+
   return (
     <>
       <PageHero

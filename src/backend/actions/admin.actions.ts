@@ -7,6 +7,8 @@ import { requireAdmin } from "@/backend/auth/session";
 import {
   clientSchema,
   deliverySchema,
+  projectSchema,
+  slugify,
   toFieldErrors,
   workSchema,
   QUOTE_STATUSES,
@@ -15,6 +17,7 @@ import {
 } from "@/backend/schemas/admin.schema";
 import * as clients from "@/backend/services/clients.service";
 import * as deliveries from "@/backend/services/deliveries.service";
+import * as projects from "@/backend/services/projects.service";
 import * as quotes from "@/backend/services/quotes.service";
 import * as works from "@/backend/services/works.service";
 import {
@@ -136,6 +139,109 @@ export async function deleteDeliveryAction(deliveryId: string) {
   await deliveries.deleteDelivery(deliveryId);
   revalidatePath("/admin", "layout");
   redirect("/admin/entregas");
+}
+
+/* ── Proyectos ─────────────────────────────────────────────── */
+
+const MAX_IMAGE_BYTES = 4_000_000; // 4 MB
+const IMAGE_MIMES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+
+export async function saveProjectAction(
+  projectId: string | null,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  // El alcance se escribe como una línea por hito.
+  const scope = String(formData.get("scope") ?? "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const parsed = projectSchema.safeParse({
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    category: formData.get("category"),
+    location: formData.get("location"),
+    year: formData.get("year"),
+    surface: formData.get("surface"),
+    duration: formData.get("duration"),
+    client: formData.get("client"),
+    summary: formData.get("summary"),
+    scope,
+  });
+
+  if (!parsed.success) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: toFieldErrors(parsed.error),
+    };
+  }
+
+  // Si no se escribió un slug, se genera desde el título.
+  const slug = parsed.data.slug
+    ? slugify(parsed.data.slug)
+    : slugify(parsed.data.title);
+
+  if (!slug) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: { slug: "No se pudo generar la dirección web" },
+    };
+  }
+
+  if (await projects.slugTaken(slug, projectId ?? undefined)) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: { slug: "Ya existe otro proyecto con esa dirección web" },
+    };
+  }
+
+  // Foto (opcional): al editar, sin archivo nuevo se conserva la actual.
+  let image: { data: Uint8Array<ArrayBuffer>; mime: string } | null = null;
+  const file = formData.get("image");
+  if (file instanceof File && file.size > 0) {
+    if (!IMAGE_MIMES.includes(file.type)) {
+      return {
+        error: "Revisa los campos marcados.",
+        fieldErrors: { image: "Formato no admitido: usa JPG, PNG, WebP o AVIF" },
+      };
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      return {
+        error: "Revisa los campos marcados.",
+        fieldErrors: { image: "La imagen supera los 4 MB" },
+      };
+    }
+    image = {
+      data: new Uint8Array(await file.arrayBuffer()),
+      mime: file.type,
+    };
+  }
+
+  if (!projectId && !image) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: { image: "Sube una foto de la obra" },
+    };
+  }
+
+  const input = { ...parsed.data, slug };
+  const project = projectId
+    ? await projects.updateProject(projectId, input, image)
+    : await projects.createProject(input, image);
+
+  // Las páginas públicas también muestran proyectos.
+  revalidatePath("/", "layout");
+  redirect(`/admin/proyectos/${project.id}`);
+}
+
+export async function deleteProjectAction(projectId: string) {
+  await requireAdmin();
+  await projects.deleteProject(projectId);
+  revalidatePath("/", "layout");
+  redirect("/admin/proyectos");
 }
 
 /* ── Cotizaciones ──────────────────────────────────────────── */

@@ -49,6 +49,30 @@ model Work {
   deliveries  Delivery[]
 }
 
+/// Obras que se muestran en la sección pública /proyectos.
+/// Se administran desde el panel (/admin/proyectos).
+model Project {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String
+  location  String
+  year      Int
+  surface   String
+  duration  String
+  client    String
+  summary   String
+  /// Alcance de la obra: arreglo JSON de strings (un hito por línea).
+  scopeJson String   @default("[]")
+  /// Foto subida desde el panel; si existe, manda sobre imagePath.
+  imageData Bytes?
+  imageMime String?
+  /// Ruta estática en /public (imágenes de ejemplo iniciales).
+  imagePath String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 /// Solicitudes de cotización recibidas desde el formulario del sitio.
 /// Se guardan SIEMPRE (aunque el correo falle) para que no se pierdan.
 model QuoteRequest {

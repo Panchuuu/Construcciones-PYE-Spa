@@ -16,6 +16,7 @@ import {
 } from "@/backend/actions/admin.actions";
 import type { MaterialItem } from "@/backend/schemas/admin.schema";
 import { AdminField, fieldClass, fieldErrorClass } from "@/frontend/admin/ui";
+import { RutInput } from "@/frontend/admin/rut-input";
 import { SignaturePad } from "@/frontend/admin/signature-pad";
 import { cn } from "@/frontend/lib/utils";
 
@@ -266,18 +267,14 @@ export function DeliveryForm({
           label="RUT de quien recibe"
           name="clientSignerRut"
           error={errors.clientSignerRut}
+          hint="Con puntos y guion; acepta K como dígito verificador"
         >
-          <input
-            id="clientSignerRut"
-            name="clientSignerRut"
-            type="text"
-            placeholder="12.345.678-9"
-            className={cn(
-              fieldClass,
-              "max-w-xs",
-              errors.clientSignerRut && fieldErrorClass,
-            )}
-          />
+          <div className="max-w-xs">
+            <RutInput
+              name="clientSignerRut"
+              hasError={Boolean(errors.clientSignerRut)}
+            />
+          </div>
         </AdminField>
 
         <div className="grid gap-6 lg:grid-cols-2">

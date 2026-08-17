@@ -1,4 +1,10 @@
-export type Project = {
+/**
+ * Proyectos de EJEMPLO usados como semilla inicial.
+ * Las obras reales viven en la base de datos y se administran desde
+ * /admin/proyectos; este archivo solo alimenta la importación inicial
+ * (npm run proyectos:importar).
+ */
+export type SeedProject = {
   slug: string;
   title: string;
   category: string;
@@ -9,16 +15,11 @@ export type Project = {
   client: string;
   summary: string;
   scope: string[];
-  /** Imagen principal en /public/images/proyectos/ */
+  /** Imagen de ejemplo en /public/images/proyectos/ */
   image: string;
 };
 
-/**
- * ⚠️ REEMPLAZAR por las obras reales.
- * Las imágenes son placeholders: sube las fotos a
- * /public/images/proyectos/ y cambia la ruta en "image".
- */
-export const projects: Project[] = [
+export const seedProjects: SeedProject[] = [
   {
     slug: "edificio-corporativo-las-condes",
     title: "Edificio corporativo Las Condes",
@@ -134,12 +135,3 @@ export const projects: Project[] = [
     image: "/images/proyectos/colegio.svg",
   },
 ];
-
-export const projectCategories = [
-  "Todos",
-  ...Array.from(new Set(projects.map((p) => p.category))),
-];
-
-export function getProject(slug: string) {
-  return projects.find((p) => p.slug === slug);
-}

@@ -10,7 +10,8 @@
     "admin:crear": "tsx scripts/crear-admin.ts",
     "db:migrar": "prisma migrate dev",
     "db:estudio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "proyectos:importar": "tsx scripts/importar-proyectos.ts"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.9.1",

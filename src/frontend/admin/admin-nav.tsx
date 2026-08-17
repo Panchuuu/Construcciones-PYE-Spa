@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   ClipboardCheck,
   HardHat,
+  Images,
   Inbox,
   LayoutDashboard,
   Users,
@@ -18,6 +19,7 @@ const links = [
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/trabajos", label: "Trabajos", icon: HardHat },
   { href: "/admin/entregas", label: "Entregas", icon: ClipboardCheck },
+  { href: "/admin/proyectos", label: "Proyectos", icon: Images },
 ];
 
 export function AdminNav() {
