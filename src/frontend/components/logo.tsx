@@ -70,14 +70,6 @@ export function Logo({
           </span>{" "}
           SpA
         </span>
-        <span
-          className={cn(
-            "font-display text-[0.5rem] font-semibold uppercase tracking-[0.24em] sm:text-[0.55rem]",
-            isLight ? "text-carbon-400" : "text-carbon-500",
-          )}
-        >
-          Fabricación &amp; Montaje
-        </span>
       </span>
     </span>
   );

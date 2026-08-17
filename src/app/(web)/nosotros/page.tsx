@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Target, Eye } from "lucide-react";
 
-import { milestones, values } from "@/backend/data/company";
+import { milestones, team, values } from "@/backend/data/company";
 import { site, stats, yearsOfExperience } from "@/backend/config/site";
 import { Container, PageHero, SectionHeading } from "@/frontend/components/ui";
 import { Reveal } from "@/frontend/components/reveal";
@@ -97,8 +97,51 @@ export default function NosotrosPage() {
         </Container>
       </section>
 
-      {/* Historia */}
+      {/* Equipo */}
       <section className="bg-carbon-50 py-20 sm:py-24">
+        <Container>
+          <Reveal>
+            <SectionHeading
+              eyebrow="Nuestro equipo"
+              title="Quiénes están detrás"
+              description="Una empresa familiar: los mismos que firman el presupuesto son los que están en la obra."
+              align="center"
+            />
+          </Reveal>
+
+          <div className="mx-auto mt-14 grid max-w-4xl gap-7 sm:grid-cols-2">
+            {team.map((member, index) => (
+              <Reveal
+                key={member.name}
+                delay={index * 90}
+                className="rounded-2xl border border-carbon-200 bg-white p-8 shadow-card"
+              >
+                <span
+                  aria-hidden="true"
+                  className="font-display flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-lg font-extrabold text-carbon-950"
+                >
+                  {member.name
+                    .split(" ")
+                    .map((part) => part[0])
+                    .join("")}
+                </span>
+                <h3 className="font-display mt-5 text-xl font-bold text-carbon-900">
+                  {member.name}
+                </h3>
+                <p className="mt-1 text-sm font-bold uppercase tracking-wider text-brand-600">
+                  {member.role}
+                </p>
+                <p className="mt-3 leading-relaxed text-carbon-600">
+                  {member.description}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Historia */}
+      <section className="bg-white py-20 sm:py-24">
         <Container>
           <Reveal>
             <SectionHeading

@@ -10,7 +10,6 @@ export const site = {
   legalName: "Construcciones PYE SpA",
   shortName: "PYE",
   rut: "77.200.759-0",
-  tagline: "Fabricación & Montaje",
   description:
     "Empresa constructora chilena especializada en hojalatería, techumbres, obra gruesa, edificación, remodelación y montaje. Ejecutamos proyectos con planificación rigurosa, seguridad certificada y entrega en plazo.",
 

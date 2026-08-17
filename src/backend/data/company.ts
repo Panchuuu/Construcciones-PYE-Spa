@@ -64,6 +64,29 @@ export const values: Value[] = [
   },
 ];
 
+export type TeamMember = {
+  name: string;
+  /** Cargo o profesión; se muestra bajo el nombre. */
+  role: string;
+  description: string;
+};
+
+/** Quiénes están detrás de la empresa (sección Nosotros). */
+export const team: TeamMember[] = [
+  {
+    name: "Patricio Parra",
+    role: "Constructor Civil",
+    description:
+      "Lidera la planificación y ejecución de las obras: presupuestos, programación y control técnico en terreno. Es quien responde por el cumplimiento de plazos y estándares de cada proyecto.",
+  },
+  {
+    name: "Eduardo Parra",
+    role: "Jefe de Terreno",
+    description:
+      "A cargo del día a día en obra: coordinación de los equipos, materiales y avances. Su experiencia en faena asegura que lo proyectado se ejecute como corresponde.",
+  },
+];
+
 export type Milestone = {
   year: string;
   title: string;
