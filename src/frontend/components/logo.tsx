@@ -3,7 +3,7 @@ import { cn } from "@/frontend/lib/utils";
 /**
  * Isotipo + logotipo, dibujado a partir del logo bordado de la empresa:
  * casita de techo rojo a la izquierda, techumbre grande con chimenea
- * humeante a la derecha, y el nombre "Construcciones Hojalatería PYE".
+ * humeante a la derecha, y el nombre "Construcciones PYE SpA".
  * ⚠️ Si más adelante tienen el logo en archivo vectorial, reemplaza el <svg>
  *    por <Image src="/logo.svg" ... />.
  */
@@ -61,14 +61,14 @@ export function Logo({
         </span>
         <span
           className={cn(
-            "font-display text-[0.92rem] font-extrabold uppercase tracking-tight sm:text-base",
+            "font-display text-[1.05rem] font-extrabold uppercase tracking-tight sm:text-lg",
             isLight ? "text-white" : "text-carbon-900",
           )}
         >
-          Hojalatería{" "}
           <span className={isLight ? "text-brand-500" : "text-brand-600"}>
             PYE
-          </span>
+          </span>{" "}
+          SpA
         </span>
         <span
           className={cn(
