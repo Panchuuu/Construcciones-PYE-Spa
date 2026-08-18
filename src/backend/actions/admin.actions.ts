@@ -8,6 +8,7 @@ import {
   clientSchema,
   deliverySchema,
   projectSchema,
+  signerSchema,
   slugify,
   toFieldErrors,
   workSchema,
@@ -19,6 +20,7 @@ import * as clients from "@/backend/services/clients.service";
 import * as deliveries from "@/backend/services/deliveries.service";
 import * as projects from "@/backend/services/projects.service";
 import * as quotes from "@/backend/services/quotes.service";
+import * as signers from "@/backend/services/signers.service";
 import * as works from "@/backend/services/works.service";
 import {
   sendDeliveryEmail,
@@ -139,6 +141,52 @@ export async function deleteDeliveryAction(deliveryId: string) {
   await deliveries.deleteDelivery(deliveryId);
   revalidatePath("/admin", "layout");
   redirect("/admin/entregas");
+}
+
+/* ── Firmantes de la empresa ───────────────────────────────── */
+
+export async function saveSignerAction(
+  signerId: string | null,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const parsed = signerSchema.safeParse({
+    name: formData.get("name"),
+    role: formData.get("role"),
+    signature: formData.get("signature") ?? "",
+    isDefault: formData.get("isDefault") === "on",
+  });
+
+  if (!parsed.success) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: toFieldErrors(parsed.error),
+    };
+  }
+
+  // Al crear, la firma es obligatoria; al editar puede conservarse.
+  if (!signerId && !parsed.data.signature) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: { signature: "Sube o dibuja la firma" },
+    };
+  }
+
+  const signer = signerId
+    ? await signers.updateSigner(signerId, parsed.data)
+    : await signers.createSigner(parsed.data);
+
+  revalidatePath("/admin", "layout");
+  redirect(`/admin/firmantes?guardado=${signer.id}`);
+}
+
+export async function deleteSignerAction(signerId: string) {
+  await requireAdmin();
+  await signers.deleteSigner(signerId);
+  revalidatePath("/admin", "layout");
+  redirect("/admin/firmantes");
 }
 
 /* ── Proyectos ─────────────────────────────────────────────── */

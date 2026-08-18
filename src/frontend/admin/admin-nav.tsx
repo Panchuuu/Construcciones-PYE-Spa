@@ -8,6 +8,7 @@ import {
   Images,
   Inbox,
   LayoutDashboard,
+  Stamp,
   Users,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const links = [
   { href: "/admin/trabajos", label: "Trabajos", icon: HardHat },
   { href: "/admin/entregas", label: "Entregas", icon: ClipboardCheck },
   { href: "/admin/proyectos", label: "Proyectos", icon: Images },
+  { href: "/admin/firmantes", label: "Firmantes", icon: Stamp },
 ];
 
 export function AdminNav() {

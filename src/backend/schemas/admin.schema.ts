@@ -108,6 +108,27 @@ export const deliverySchema = z
 
 export type DeliveryInput = z.infer<typeof deliverySchema>;
 
+/**
+ * Representante de la empresa con su firma guardada.
+ * Al editar, la firma puede venir vacía: se conserva la que ya tenía.
+ */
+export const signerSchema = z.object({
+  name: z.string().trim().min(3, "Escribe el nombre completo").max(100),
+  role: z.string().trim().max(60).optional().or(z.literal("")),
+  signature: z
+    .string()
+    .refine(
+      (value) => value === "" || value.startsWith("data:image/png;base64,"),
+      { message: "Falta la firma" },
+    )
+    .refine((value) => value.length <= 300_000, {
+      message: "La firma es demasiado pesada, súbela de nuevo",
+    }),
+  isDefault: z.boolean().default(false),
+});
+
+export type SignerInput = z.infer<typeof signerSchema>;
+
 /** Convierte un título en slug para la URL: "Galpón Lampa" → "galpon-lampa". */
 export function slugify(value: string): string {
   return value

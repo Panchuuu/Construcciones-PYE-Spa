@@ -49,6 +49,21 @@ model Work {
   deliveries  Delivery[]
 }
 
+/// Representantes de la empresa que firman las actas de entrega.
+/// Su firma queda guardada para no tener que dibujarla en cada acta.
+model Signer {
+  id        String   @id @default(cuid())
+  name      String
+  /// Cargo, por ejemplo "Constructor Civil".
+  role      String?
+  /// Firma como data URL PNG con fondo transparente.
+  signature String
+  /// La que viene marcada por defecto al crear un acta.
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 /// Obras que se muestran en la sección pública /proyectos.
 /// Se administran desde el panel (/admin/proyectos).
 model Project {

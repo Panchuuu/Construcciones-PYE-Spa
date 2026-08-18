@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { requireAdmin } from "@/backend/auth/session";
+import { listSigners } from "@/backend/services/signers.service";
 import { listWorks } from "@/backend/services/works.service";
 import { AdminCard, AdminPageHeader, EmptyState } from "@/frontend/admin/ui";
 import { DeliveryForm } from "@/frontend/admin/delivery-form";
@@ -14,7 +15,8 @@ export default async function NuevaEntregaPage({
 }) {
   const session = await requireAdmin();
   const { trabajo } = await searchParams;
-  const works = await listWorks();
+  const [works, signers] = await Promise.all([listWorks(), listSigners()]);
+  const defaultSigner = signers.find((signer) => signer.isDefault);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -39,7 +41,16 @@ export default async function NuevaEntregaPage({
               clientName: work.client.name,
             }))}
             preselectedWorkId={trabajo}
-            defaultCompanySigner={session.name}
+            defaultCompanySigner={
+              (defaultSigner ?? signers[0])?.name ?? session.name
+            }
+            signers={signers.map((signer) => ({
+              id: signer.id,
+              name: signer.name,
+              role: signer.role,
+              signature: signer.signature,
+            }))}
+            defaultSignerId={defaultSigner?.id}
           />
         </AdminCard>
       )}

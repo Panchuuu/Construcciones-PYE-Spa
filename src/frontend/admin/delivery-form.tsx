@@ -18,6 +18,10 @@ import type { MaterialItem } from "@/backend/schemas/admin.schema";
 import { AdminField, fieldClass, fieldErrorClass } from "@/frontend/admin/ui";
 import { RutInput } from "@/frontend/admin/rut-input";
 import { SignaturePad } from "@/frontend/admin/signature-pad";
+import {
+  CompanySignaturePicker,
+  type SavedSigner,
+} from "@/frontend/admin/company-signature-picker";
 import { cn } from "@/frontend/lib/utils";
 
 type WorkOption = {
@@ -30,10 +34,15 @@ export function DeliveryForm({
   works,
   preselectedWorkId,
   defaultCompanySigner,
+  signers,
+  defaultSignerId,
 }: {
   works: WorkOption[];
   preselectedWorkId?: string;
   defaultCompanySigner: string;
+  /** Firmas de la empresa ya guardadas en /admin/firmantes. */
+  signers: SavedSigner[];
+  defaultSignerId?: string;
 }) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     createDeliveryAction,
@@ -278,10 +287,11 @@ export function DeliveryForm({
         </AdminField>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <SignaturePad
-            name="companySignature"
-            label="Firma representante empresa"
-            error={errors.companySignature}
+          <CompanySignaturePicker
+            signers={signers}
+            defaultSignerId={defaultSignerId}
+            nameFieldId="companySignerName"
+            signatureError={errors.companySignature}
           />
           <SignaturePad
             name="clientSignature"
