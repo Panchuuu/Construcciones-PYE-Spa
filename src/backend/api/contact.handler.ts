@@ -68,18 +68,19 @@ export async function handleContactRequest(request: Request) {
 
   // La cotización se guarda SIEMPRE en la base de datos (aparece en el
   // panel de administración), incluso si después el correo falla.
-  let saved = false;
+  let quoteId: string | undefined;
   try {
-    await saveQuoteRequest(parsed.data);
-    saved = true;
+    const saved = await saveQuoteRequest(parsed.data);
+    quoteId = saved.id;
   } catch (error) {
     console.error("[contacto] No se pudo guardar la cotización:", error);
   }
 
-  const result = await submitQuoteRequest(parsed.data);
+  // Avisa a la empresa (correo siempre; WhatsApp/Telegram si están configurados).
+  const result = await submitQuoteRequest(parsed.data, quoteId);
 
   // Solo si NO quedó registrada en ninguna parte pedimos reintentar.
-  if (!result.delivered && !saved) {
+  if (!result.delivered && !quoteId) {
     const message =
       result.reason === "not-configured"
         ? "El envío de correos aún no está configurado en el servidor. Escríbenos por WhatsApp y te respondemos de inmediato."

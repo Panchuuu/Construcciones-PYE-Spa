@@ -35,6 +35,17 @@ export const env = {
     process.env.SMTP_USER ||
     "Sitio web <onboarding@resend.dev>",
 
+  /**
+   * Aviso instantáneo al celular cuando llega una cotización (opcional).
+   * WhatsApp por CallMeBot: https://www.callmebot.com/blog/free-api-whatsapp-messages/
+   */
+  whatsappAlertPhone: process.env.WHATSAPP_ALERT_PHONE ?? "",
+  whatsappAlertApiKey: process.env.WHATSAPP_ALERT_APIKEY ?? "",
+
+  /** Alternativa por Telegram: bot creado con @BotFather. */
+  telegramBotToken: process.env.TELEGRAM_BOT_TOKEN ?? "",
+  telegramChatId: process.env.TELEGRAM_CHAT_ID ?? "",
+
   isProduction: process.env.NODE_ENV === "production",
 } as const;
 

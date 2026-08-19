@@ -56,6 +56,9 @@ echo 'AUTH_SECRET=PEGA_AQUI_UN_SECRETO_LARGO' >> .env
   **Sin esta variable el panel /admin no arranca en producción.**
 - Para activar el correo (formulario y actas) agregar también las variables
   `SMTP_*` (Gmail con contraseña de aplicación; ver `.env.example`).
+- Opcional: para recibir además un aviso al celular cuando entra una
+  cotización, agregar `WHATSAPP_ALERT_*` (CallMeBot) o `TELEGRAM_*`
+  (bot propio). Las instrucciones paso a paso están en `.env.example`.
 
 ## 5. Instalar, migrar y compilar
 
