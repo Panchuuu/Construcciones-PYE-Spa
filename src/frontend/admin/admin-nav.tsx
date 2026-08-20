@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ClipboardCheck,
+  FileText,
   HardHat,
   Images,
   Inbox,
@@ -17,6 +18,7 @@ import { cn } from "@/frontend/lib/utils";
 const links = [
   { href: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
   { href: "/admin/cotizaciones", label: "Cotizaciones", icon: Inbox },
+  { href: "/admin/presupuestos", label: "Presupuestos", icon: FileText },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/trabajos", label: "Trabajos", icon: HardHat },
   { href: "/admin/entregas", label: "Entregas", icon: ClipboardCheck },

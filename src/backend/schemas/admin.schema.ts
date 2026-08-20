@@ -179,6 +179,79 @@ export const projectSchema = z.object({
 
 export type ProjectInput = z.infer<typeof projectSchema>;
 
+/* ── Presupuestos ──────────────────────────────────────────── */
+
+/**
+ * Cantidad de una partida: acepta coma o punto decimal ("13,00").
+ * Se guarda como número.
+ */
+const quantitySchema = z
+  .string()
+  .trim()
+  .min(1, "Indica la cantidad")
+  .transform((value) => Number(value.replace(/\./g, "").replace(",", ".")))
+  .refine((value) => Number.isFinite(value) && value > 0, {
+    message: "Cantidad no válida",
+  });
+
+/** Precio en pesos chilenos, sin decimales. */
+const priceSchema = z.coerce
+  .number()
+  .int("El precio debe ser un número entero")
+  .min(0, "Precio no válido")
+  .max(9_999_999_999, "Precio demasiado grande");
+
+export const budgetItemSchema = z.object({
+  descripcion: z.string().trim().min(1, "Describe la partida").max(600),
+  unidad: z.string().trim().max(10).optional().or(z.literal("")),
+  cantidad: quantitySchema,
+  precio: priceSchema,
+});
+
+export type BudgetItem = z.infer<typeof budgetItemSchema>;
+
+export const budgetSchema = z.object({
+  clientId: z.string().trim().optional().or(z.literal("")),
+  clientName: z.string().trim().max(120).optional().or(z.literal("")),
+  clientRut: rutSchema.optional(),
+  clientPhone: z
+    .string()
+    .trim()
+    .max(20)
+    .regex(/^[0-9+()\s-]*$/, "El teléfono solo puede tener números y + ( ) -")
+    .optional()
+    .or(z.literal("")),
+  clientEmail: z
+    .string()
+    .trim()
+    .email("Correo no válido")
+    .optional()
+    .or(z.literal("")),
+  workAddress: z.string().trim().max(150).optional().or(z.literal("")),
+  workPlace: z.string().trim().max(150).optional().or(z.literal("")),
+  workTitle: z.string().trim().min(3, "Escribe el título de la obra").max(200),
+  date: z.coerce.date(),
+  validityDays: z.coerce
+    .number()
+    .int("Debe ser un número de días")
+    .min(1, "Mínimo 1 día")
+    .max(365, "Máximo 365 días"),
+  items: z.array(budgetItemSchema).min(1, "Agrega al menos una partida"),
+  conditions: z.string().trim().max(6000).optional().or(z.literal("")),
+});
+
+export type BudgetInput = z.infer<typeof budgetSchema>;
+
+/** Condiciones comerciales precargadas al crear un presupuesto. */
+export const DEFAULT_BUDGET_CONDITIONS = [
+  "Plazos de ejecución. Se informarán en la aceptación del presupuesto y se cuentan desde la entrega del recinto en condiciones de intervención.",
+  "Forma de pago. Según acuerdo entre las partes.",
+  "Alcance. Los valores incluyen materiales, mano de obra especializada, herramientas, supervisión de faena y retiro de escombros. Se excluyen obras no descritas expresamente en el detalle, modificaciones estructurales, permisos municipales y trabajos derivados de condiciones preexistentes no visibles al momento de la visita.",
+  "Garantía. Construcciones PYE SpA se hace responsable de la ejecución, supervisión y garantía de la totalidad de las partidas, incluidas aquellas ejecutadas mediante terceros especialistas.",
+  "Obras adicionales. Toda partida no contemplada será cotizada y aprobada por escrito antes de su ejecución.",
+  "Validez. La presente oferta tiene validez desde su fecha de emisión por los días indicados. Los valores están expresados en pesos chilenos.",
+].join("\n");
+
 export const QUOTE_STATUSES = {
   nueva: "Nueva",
   contactada: "Contactada",

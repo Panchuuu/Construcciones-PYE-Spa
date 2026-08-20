@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/backend/auth/session";
 import {
+  budgetSchema,
   clientSchema,
   deliverySchema,
   projectSchema,
@@ -16,6 +17,7 @@ import {
   type MaterialItem,
   type QuoteStatus,
 } from "@/backend/schemas/admin.schema";
+import * as budgets from "@/backend/services/budgets.service";
 import * as clients from "@/backend/services/clients.service";
 import * as deliveries from "@/backend/services/deliveries.service";
 import * as projects from "@/backend/services/projects.service";
@@ -141,6 +143,60 @@ export async function deleteDeliveryAction(deliveryId: string) {
   await deliveries.deleteDelivery(deliveryId);
   revalidatePath("/admin", "layout");
   redirect("/admin/entregas");
+}
+
+/* ── Presupuestos ──────────────────────────────────────────── */
+
+export async function saveBudgetAction(
+  budgetId: string | null,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  // Las partidas llegan como JSON serializado desde el formulario
+  let items: unknown = [];
+  try {
+    items = JSON.parse(String(formData.get("items") ?? "[]"));
+  } catch {
+    items = [];
+  }
+
+  const parsed = budgetSchema.safeParse({
+    clientId: formData.get("clientId"),
+    clientName: formData.get("clientName"),
+    clientRut: formData.get("clientRut"),
+    clientPhone: formData.get("clientPhone"),
+    clientEmail: formData.get("clientEmail"),
+    workAddress: formData.get("workAddress"),
+    workPlace: formData.get("workPlace"),
+    workTitle: formData.get("workTitle"),
+    date: formData.get("date"),
+    validityDays: formData.get("validityDays"),
+    items,
+    conditions: formData.get("conditions"),
+  });
+
+  if (!parsed.success) {
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: toFieldErrors(parsed.error),
+    };
+  }
+
+  const budget = budgetId
+    ? await budgets.updateBudget(budgetId, parsed.data)
+    : await budgets.createBudget(parsed.data);
+
+  revalidatePath("/admin", "layout");
+  redirect(`/admin/presupuestos/${budget.id}`);
+}
+
+export async function deleteBudgetAction(budgetId: string) {
+  await requireAdmin();
+  await budgets.deleteBudget(budgetId);
+  revalidatePath("/admin", "layout");
+  redirect("/admin/presupuestos");
 }
 
 /* ── Firmantes de la empresa ───────────────────────────────── */

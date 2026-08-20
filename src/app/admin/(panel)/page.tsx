@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ClipboardCheck,
   ClipboardPlus,
+  FilePlus2,
   HardHat,
   Inbox,
   UserPlus,
@@ -49,6 +50,13 @@ export default async function AdminDashboardPage() {
           Registrar entrega
         </Link>
         <Link
+          href="/admin/presupuestos/nuevo"
+          className="inline-flex items-center gap-2 rounded-xl border-2 border-carbon-200 bg-white px-5 py-3 text-sm font-bold text-carbon-900 transition-colors hover:border-carbon-900"
+        >
+          <FilePlus2 className="h-4 w-4" aria-hidden="true" />
+          Nuevo presupuesto
+        </Link>
+        <Link
           href="/admin/clientes/nuevo"
           className="inline-flex items-center gap-2 rounded-xl border-2 border-carbon-200 bg-white px-5 py-3 text-sm font-bold text-carbon-900 transition-colors hover:border-carbon-900"
         >
@@ -65,21 +73,21 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Cifras */}
-      <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href}>
             <AdminCard className="transition-all hover:-translate-y-0.5 hover:shadow-lift">
               <stat.icon className="h-5 w-5 text-brand-600" aria-hidden="true" />
-              <dd className="font-display mt-3 text-3xl font-extrabold text-carbon-900">
+              <p className="font-display mt-3 text-4xl font-extrabold tracking-tight text-carbon-900 tabular-nums">
                 {stat.value}
-              </dd>
-              <dt className="mt-1 text-xs font-semibold uppercase tracking-wide text-carbon-500">
+              </p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-carbon-500">
                 {stat.label}
-              </dt>
+              </p>
             </AdminCard>
           </Link>
         ))}
-      </dl>
+      </div>
 
       {/* Últimas cotizaciones */}
       <section>

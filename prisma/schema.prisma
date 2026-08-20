@@ -33,6 +33,7 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   works     Work[]
+  budgets   Budget[]
 }
 
 /// Trabajos/obras asociados a un cliente.
@@ -100,6 +101,36 @@ model QuoteRequest {
   message   String
   status    String   @default("nueva") // nueva | contactada | cerrada
   createdAt DateTime @default(now())
+}
+
+/// Presupuestos de obra emitidos desde el panel.
+/// Los datos del cliente quedan copiados tal como se imprimen:
+/// pueden venir de un cliente registrado o escribirse libres.
+model Budget {
+  id           String   @id @default(cuid())
+  folio        Int      @unique
+  /// Fecha de emisión que aparece en el documento.
+  date         DateTime @default(now())
+  /// Validez de la oferta en días corridos.
+  validityDays Int      @default(30)
+  clientId     String?
+  client       Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientName   String?
+  clientRut    String?
+  clientPhone  String?
+  clientEmail  String?
+  /// Dirección de la obra (calle y número).
+  workAddress  String?
+  /// Ubicación dentro del recinto (piso, oficina, sector…).
+  workPlace    String?
+  /// Título de la obra: "HABILITACIÓN Y MODIFICACIÓN DE …".
+  workTitle    String
+  /// Partidas: JSON [{descripcion, unidad, cantidad, precio}]
+  itemsJson    String
+  /// Condiciones comerciales: una por línea, se numeran al imprimir.
+  conditions   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 /// Actas de entrega conforme (de trabajo o de materiales),
