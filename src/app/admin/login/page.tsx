@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { getSession } from "@/backend/auth/session";
+import { BlueprintGrid } from "@/frontend/components/ui";
 import { Logo } from "@/frontend/components/logo";
 import { LoginForm } from "@/frontend/admin/login-form";
 
@@ -16,8 +17,9 @@ export default async function AdminLoginPage() {
   if (session) redirect("/admin");
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-carbon-950 px-5 py-10">
-      <div className="w-full max-w-sm">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-carbon-950 px-5 py-10">
+      <BlueprintGrid />
+      <div className="relative w-full max-w-sm">
         <div className="flex justify-center">
           <Logo variant="light" />
         </div>

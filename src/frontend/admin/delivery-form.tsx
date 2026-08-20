@@ -105,7 +105,7 @@ export function DeliveryForm({
               *
             </span>
           </span>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {(
               [
                 { value: "trabajo", label: "Entrega de trabajo", icon: ClipboardCheck },
@@ -143,7 +143,7 @@ export function DeliveryForm({
         </div>
 
         {type === "materiales" && (
-          <div>
+          <div className="anim-rise">
             <span className="mb-2 block text-sm font-semibold text-carbon-800">
               Materiales entregados
               <span className="ml-1 text-brand-600" aria-hidden="true">
@@ -151,9 +151,10 @@ export function DeliveryForm({
               </span>
             </span>
 
+            {/* En teléfono la descripción ocupa su propia línea */}
             <div className="space-y-2.5">
               {items.map((item, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className="flex flex-wrap gap-2">
                   <input
                     type="text"
                     value={item.descripcion}
@@ -162,7 +163,7 @@ export function DeliveryForm({
                     }
                     placeholder="Descripción (ej: Plancha zinc 0.35 × 3 m)"
                     aria-label={`Material ${index + 1}: descripción`}
-                    className={cn(fieldClass, "flex-1")}
+                    className={cn(fieldClass, "w-full sm:w-auto sm:flex-1")}
                   />
                   <input
                     type="text"
@@ -172,7 +173,7 @@ export function DeliveryForm({
                     }
                     placeholder="Cant."
                     aria-label={`Material ${index + 1}: cantidad`}
-                    className={cn(fieldClass, "w-20")}
+                    className={cn(fieldClass, "min-w-0 flex-1 sm:w-20 sm:flex-none")}
                   />
                   <input
                     type="text"
@@ -180,7 +181,7 @@ export function DeliveryForm({
                     onChange={(e) => updateItem(index, { unidad: e.target.value })}
                     placeholder="Unidad"
                     aria-label={`Material ${index + 1}: unidad`}
-                    className={cn(fieldClass, "w-24")}
+                    className={cn(fieldClass, "min-w-0 flex-1 sm:w-24 sm:flex-none")}
                   />
                   <button
                     type="button"

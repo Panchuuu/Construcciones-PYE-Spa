@@ -58,13 +58,20 @@ export function DeliveryActions({
         </button>
       </div>
 
+      {!hasClientEmail && (
+        <p className="text-xs text-carbon-500">
+          El cliente no tiene correo registrado en su ficha, por eso no se
+          puede enviar el acta por correo.
+        </p>
+      )}
+
       {result && (
         <p
           role="status"
           className={
             result.ok
-              ? "flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800"
-              : "flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+              ? "anim-rise flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800"
+              : "anim-rise flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
           }
         >
           {result.ok ? (

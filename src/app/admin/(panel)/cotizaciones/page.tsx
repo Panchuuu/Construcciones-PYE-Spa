@@ -80,7 +80,31 @@ export default async function CotizacionesPage({
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card">
+        <>
+          {/* Lista compacta en teléfonos: toda la fila es un enlace */}
+          <ul className="divide-y divide-carbon-100 overflow-hidden rounded-2xl border border-carbon-200 bg-white shadow-card sm:hidden">
+            {quotes.map((quote) => (
+              <li key={quote.id}>
+                <Link
+                  href={`/admin/cotizaciones/${quote.id}`}
+                  className="block px-5 py-4 transition-colors hover:bg-carbon-50"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="min-w-0 truncate font-bold text-carbon-900">
+                      {quote.name}
+                    </p>
+                    <QuoteStatusBadge status={quote.status} />
+                  </div>
+                  <p className="mt-0.5 text-sm text-carbon-700">{quote.service}</p>
+                  <p className="mt-1 text-xs text-carbon-500">
+                    {quote.phone} · {formatDateShort(quote.createdAt)}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card sm:block">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead>
               <tr className="border-b border-carbon-200 bg-carbon-50 text-xs font-bold uppercase tracking-wide text-carbon-600">
@@ -120,7 +144,8 @@ export default async function CotizacionesPage({
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

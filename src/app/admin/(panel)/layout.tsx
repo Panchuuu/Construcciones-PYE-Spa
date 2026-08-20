@@ -42,6 +42,8 @@ export default async function AdminLayout({
         </div>
 
         <AdminNav />
+        {/* Respiro para que el subrayado rojo de la pestaña activa no se funda con la franja */}
+        <div className="hazard-stripe mt-1 h-1" aria-hidden="true" />
       </header>
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-5 py-8 sm:px-8">

@@ -65,7 +65,39 @@ export default async function ClientesPage({
           actionLabel={q ? undefined : "Registrar cliente"}
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card">
+        <>
+          {/* Lista compacta en teléfonos: toda la fila es un enlace */}
+          <ul className="divide-y divide-carbon-100 overflow-hidden rounded-2xl border border-carbon-200 bg-white shadow-card sm:hidden">
+            {clients.map((client) => (
+              <li key={client.id}>
+                <Link
+                  href={`/admin/clientes/${client.id}`}
+                  className="block px-5 py-4 transition-colors hover:bg-carbon-50"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="min-w-0 truncate font-bold text-carbon-900">
+                      {client.name}
+                    </p>
+                    <span className="shrink-0 text-xs text-carbon-500">
+                      {client._count.works} trabajo(s)
+                    </span>
+                  </div>
+                  {client.company && (
+                    <p className="mt-0.5 text-xs text-carbon-500">
+                      {client.company}
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-carbon-500">
+                    {[client.rut, client.phone ?? client.email]
+                      .filter(Boolean)
+                      .join(" · ") || "Sin datos de contacto"}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card sm:block">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-carbon-200 bg-carbon-50 text-xs font-bold uppercase tracking-wide text-carbon-600">
@@ -106,7 +138,8 @@ export default async function ClientesPage({
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

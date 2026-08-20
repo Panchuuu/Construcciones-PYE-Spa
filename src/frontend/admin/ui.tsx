@@ -86,7 +86,11 @@ export function AdminPageHeader({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-carbon-900 sm:text-3xl">
+        <span
+          aria-hidden="true"
+          className="mb-3 block h-1 w-10 rounded-full bg-brand-500"
+        />
+        <h1 className="font-display text-2xl font-extrabold tracking-tight text-carbon-900 sm:text-3xl">
           {title}
         </h1>
         {description && (

@@ -56,6 +56,13 @@ body {
   color: var(--color-carbon-950);
 }
 
+/* Anillo de foco de marca al navegar con teclado (los controles pueden
+   sobreescribirlo con sus propias clases focus-visible). */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
 /* Títulos: displays condensados y apretados */
 .title-xl {
   font-family: var(--font-display);
@@ -83,6 +90,64 @@ body {
   );
 }
 
+/* ── Entrada del hero: subida + subrayado que se dibuja ────── */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.hero-enter {
+  animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hero-underline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-line 0.7s ease-out 0.9s forwards;
+}
+
+/* La franja de obra se "construye" de izquierda a derecha */
+@keyframes stripe-build {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.hero-stripe {
+  transform-origin: left;
+  animation: stripe-build 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+/* Aparición breve de contenido condicional (formularios, avisos) */
+.anim-rise {
+  animation: rise-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Respuesta del FAQ: entra suave al abrir el <details> */
+details[open] .faq-answer {
+  animation: rise-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Menú móvil: baja con fundido al abrirse */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.menu-enter {
+  animation: menu-in 0.2s ease-out both;
+}
+
 /* ── Animación de entrada al hacer scroll ─────────────────── */
 .reveal {
   opacity: 0;
@@ -106,5 +171,16 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .hero-enter,
+  .hero-stripe,
+  .anim-rise,
+  .menu-enter,
+  details[open] .faq-answer {
+    animation: none;
+  }
+  .hero-underline {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }

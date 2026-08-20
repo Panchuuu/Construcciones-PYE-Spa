@@ -138,7 +138,7 @@ export function ClientForm({
       {state?.error && (
         <p
           role="alert"
-          className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+          className="anim-rise flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
         >
           <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
           {state.error}

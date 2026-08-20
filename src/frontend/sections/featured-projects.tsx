@@ -3,11 +3,14 @@ import { ArrowRight } from "lucide-react";
 import { listPublicProjects } from "@/backend/services/projects.service";
 import { ButtonLink, Container, SectionHeading } from "@/frontend/components/ui";
 import { Reveal } from "@/frontend/components/reveal";
-import { ProjectCard } from "@/frontend/components/project-card";
+import {
+  FeaturedProjectCard,
+  ProjectCard,
+} from "@/frontend/components/project-card";
 
 export async function FeaturedProjects() {
   const projects = await listPublicProjects();
-  const featured = projects.slice(0, 3);
+  const [lead, ...rest] = projects.slice(0, 3);
 
   return (
     <section className="bg-carbon-50 py-20 sm:py-28">
@@ -30,13 +33,21 @@ export async function FeaturedProjects() {
           </div>
         </Reveal>
 
-        <div className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((project, index) => (
-            <Reveal key={project.slug} delay={index * 90}>
-              <ProjectCard project={project} />
-            </Reveal>
-          ))}
-        </div>
+        {lead && (
+          <Reveal className="mt-14">
+            <FeaturedProjectCard project={lead} />
+          </Reveal>
+        )}
+
+        {rest.length > 0 && (
+          <div className="mt-7 grid gap-7 sm:grid-cols-2">
+            {rest.map((project, index) => (
+              <Reveal key={project.slug} delay={(index + 1) * 90}>
+                <ProjectCard project={project} />
+              </Reveal>
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );

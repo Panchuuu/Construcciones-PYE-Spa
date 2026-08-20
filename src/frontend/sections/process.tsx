@@ -6,38 +6,45 @@ export function Process() {
   return (
     <section className="bg-white py-20 sm:py-28">
       <Container>
-        <Reveal>
-          <SectionHeading
-            eyebrow="Cómo trabajamos"
-            title="Cuatro etapas, cero improvisación"
-            description="Un método claro para que sepas siempre en qué punto está tu proyecto y cuánto falta."
-            align="center"
-          />
-        </Reveal>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-20">
+          <Reveal>
+            <div className="lg:sticky lg:top-32">
+              <SectionHeading
+                eyebrow="Cómo trabajamos"
+                title="Cuatro etapas, cero improvisación"
+                description="Un método claro para que sepas siempre en qué punto está tu proyecto y cuánto falta."
+              />
+            </div>
+          </Reveal>
 
-        <ol className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {processSteps.map((item, index) => (
-            <Reveal as="li" key={item.step} delay={index * 90} className="relative">
-              {/* Línea conectora entre pasos (solo en escritorio) */}
-              {index < processSteps.length - 1 && (
+          {/* Línea de tiempo vertical */}
+          <ol className="relative space-y-12 border-l border-carbon-200 pl-10 sm:pl-14">
+            {processSteps.map((item, index) => (
+              <Reveal as="li" key={item.step} delay={index * 90} className="relative">
+                {/* Nodo sobre la línea */}
                 <span
                   aria-hidden="true"
-                  className="absolute left-16 top-7 hidden h-px w-[calc(100%-3rem)] bg-gradient-to-r from-carbon-200 to-transparent lg:block"
-                />
-              )}
+                  className="absolute -left-10 top-1 flex h-4 w-4 -translate-x-1/2 items-center justify-center sm:-left-14"
+                >
+                  <span className="h-4 w-4 rounded-full border-2 border-brand-500 bg-white" />
+                </span>
 
-              <span className="font-display relative flex h-14 w-14 items-center justify-center rounded-2xl bg-carbon-900 text-lg font-extrabold text-brand-500">
-                {item.step}
-              </span>
-              <h3 className="font-display mt-6 text-lg font-bold text-carbon-900">
-                {item.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-carbon-600">
-                {item.description}
-              </p>
-            </Reveal>
-          ))}
-        </ol>
+                <span
+                  aria-hidden="true"
+                  className="font-display block select-none text-[4rem] font-extrabold leading-[0.85] tracking-tight text-carbon-100"
+                >
+                  {item.step}
+                </span>
+                <h3 className="font-display -mt-5 text-xl font-bold text-carbon-900">
+                  {item.title}
+                </h3>
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-carbon-600 sm:text-base">
+                  {item.description}
+                </p>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
       </Container>
     </section>
   );

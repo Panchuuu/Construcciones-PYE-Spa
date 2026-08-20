@@ -140,7 +140,7 @@ export function CompanySignaturePicker({
       </div>
 
       {selected === null ? (
-        <div className="mt-3">
+        <div className="anim-rise mt-3">
           <SignaturePad
             name="companySignature"
             label="Dibuja la firma"

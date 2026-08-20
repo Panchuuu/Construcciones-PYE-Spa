@@ -44,7 +44,47 @@ export default async function EntregasPage() {
           actionLabel="Registrar la primera entrega"
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card">
+        <>
+          {/* Lista compacta en teléfonos: toda la fila es un enlace */}
+          <ul className="divide-y divide-carbon-100 overflow-hidden rounded-2xl border border-carbon-200 bg-white shadow-card sm:hidden">
+            {deliveries.map((delivery) => (
+              <li key={delivery.id}>
+                <Link
+                  href={`/admin/entregas/${delivery.id}`}
+                  className="block px-5 py-4 transition-colors hover:bg-carbon-50"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-display font-extrabold text-carbon-900">
+                      {formatFolio(delivery.folio)}
+                    </span>
+                    <DeliveryTypeBadge type={delivery.type} />
+                    <CheckCircle2
+                      className={
+                        delivery.receivedOk
+                          ? "h-4 w-4 text-green-600"
+                          : "h-4 w-4 text-amber-500"
+                      }
+                      aria-label={
+                        delivery.receivedOk
+                          ? "Recibida conforme"
+                          : "Recibida con observaciones"
+                      }
+                    />
+                  </div>
+                  <p className="mt-1.5 truncate text-sm font-semibold text-carbon-900">
+                    {delivery.work.title}
+                  </p>
+                  <p className="mt-0.5 text-xs text-carbon-500">
+                    {delivery.work.client.name} · recibió{" "}
+                    {delivery.clientSignerName} ·{" "}
+                    {formatDateShort(delivery.date)}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden overflow-x-auto rounded-2xl border border-carbon-200 bg-white shadow-card sm:block">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead>
               <tr className="border-b border-carbon-200 bg-carbon-50 text-xs font-bold uppercase tracking-wide text-carbon-600">
@@ -110,7 +150,8 @@ export default async function EntregasPage() {
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

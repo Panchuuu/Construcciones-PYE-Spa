@@ -13,6 +13,7 @@ export function CtaBand({
 }) {
   return (
     <section className="relative overflow-hidden bg-brand-500">
+      <div className="hazard-stripe relative z-10 h-2" aria-hidden="true" />
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-10"
@@ -22,18 +23,18 @@ export function CtaBand({
         }}
       />
 
-      <Container className="relative py-16 sm:py-20">
-        <Reveal className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="title-xl text-3xl text-carbon-950 sm:text-4xl">
+      <Container className="relative py-16 sm:py-24">
+        <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
+          <div>
+            <h2 className="title-xl text-3xl text-carbon-950 sm:text-5xl lg:text-6xl">
               {title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-carbon-950 sm:text-lg">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-carbon-950 sm:text-lg">
               {description}
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <ButtonLink href="/contacto" variant="dark" className="text-base">
               Solicitar presupuesto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
