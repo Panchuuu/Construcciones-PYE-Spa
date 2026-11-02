@@ -6,13 +6,19 @@ import {
   FilePlus2,
   HardHat,
   Inbox,
+  PlusCircle,
   UserPlus,
   Users,
+  UsersRound,
 } from "lucide-react";
 
 import { requireAdmin } from "@/backend/auth/session";
 import { getDashboard } from "@/backend/services/dashboard.service";
 import { formatFolio } from "@/backend/services/deliveries.service";
+import { currentPeriod, formatPeriod } from "@/backend/lib/payroll";
+import { prisma } from "@/backend/db/prisma";
+import { movementTotals } from "@/backend/services/movements.service";
+import { cn, formatCLP } from "@/frontend/lib/utils";
 import {
   AdminCard,
   AdminPageHeader,
@@ -24,7 +30,12 @@ import {
 
 export default async function AdminDashboardPage() {
   const session = await requireAdmin();
-  const data = await getDashboard();
+  const period = currentPeriod();
+  const [data, month, activeEmployees] = await Promise.all([
+    getDashboard(),
+    movementTotals({ period }),
+    prisma.employee.count({ where: { status: "activo" } }),
+  ]);
 
   const stats = [
     { label: "Cotizaciones nuevas", value: data.newQuotes, icon: Inbox, href: "/admin/cotizaciones?estado=nueva" },
@@ -48,6 +59,13 @@ export default async function AdminDashboardPage() {
         >
           <ClipboardPlus className="h-4 w-4" aria-hidden="true" />
           Registrar entrega
+        </Link>
+        <Link
+          href="/admin/finanzas/nuevo"
+          className="inline-flex items-center gap-2 rounded-xl border-2 border-carbon-200 bg-white px-5 py-3 text-sm font-bold text-carbon-900 transition-colors hover:border-carbon-900"
+        >
+          <PlusCircle className="h-4 w-4" aria-hidden="true" />
+          Registrar gasto o ingreso
         </Link>
         <Link
           href="/admin/presupuestos/nuevo"
@@ -88,6 +106,35 @@ export default async function AdminDashboardPage() {
           </Link>
         ))}
       </div>
+
+      {/* Finanzas del mes y personal */}
+      <Link href="/admin/finanzas" className="block">
+        <AdminCard className="transition-all hover:-translate-y-0.5 hover:shadow-lift">
+          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-carbon-500">
+              Finanzas · <span className="capitalize">{formatPeriod(period)}</span>
+            </p>
+            <span className="flex items-center gap-2 text-sm text-carbon-600">
+              <UsersRound className="h-4 w-4 text-brand-600" aria-hidden="true" />
+              {activeEmployees} {activeEmployees === 1 ? "trabajador activo" : "trabajadores activos"}
+            </span>
+          </div>
+          <dl className="mt-3 grid grid-cols-3 gap-4">
+            {[
+              { label: "Ingresos", value: month.income, tone: "text-green-700" },
+              { label: "Gastos", value: month.expense, tone: "text-carbon-900" },
+              { label: "Resultado", value: month.balance, tone: month.balance >= 0 ? "text-green-700" : "text-red-700" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-carbon-500">{stat.label}</dt>
+                <dd className={cn("font-display mt-1 text-xl font-extrabold tabular-nums sm:text-2xl", stat.tone)}>
+                  {formatCLP(stat.value)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </AdminCard>
+      </Link>
 
       {/* Últimas cotizaciones */}
       <section>

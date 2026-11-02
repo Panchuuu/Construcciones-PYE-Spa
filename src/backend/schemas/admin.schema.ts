@@ -8,7 +8,7 @@ import { formatRut, isValidRut } from "@/backend/lib/rut";
  * RUT chileno opcional: si viene, debe tener dígito verificador válido
  * (acepta K) y se guarda siempre con formato "12.345.678-5".
  */
-const rutSchema = z
+export const rutSchema = z
   .string()
   .trim()
   .refine((value) => value === "" || isValidRut(value), {

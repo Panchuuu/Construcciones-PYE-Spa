@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { after } from "next/server";
 import { LogOut } from "lucide-react";
 
 import { logoutAction } from "@/backend/actions/auth.actions";
 import { requireAdmin } from "@/backend/auth/session";
+import { syncIfStale } from "@/backend/services/indicators-sync.service";
 import { Logo } from "@/frontend/components/logo";
 import { AdminNav } from "@/frontend/admin/admin-nav";
 
@@ -16,6 +18,10 @@ export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await requireAdmin();
+
+  // Indicadores previsionales al día sin que nadie tenga que acordarse:
+  // si tienen más de 2 días, se consultan a Previred después de responder.
+  after(() => syncIfStale());
 
   return (
     <div className="flex min-h-dvh flex-col bg-carbon-50">

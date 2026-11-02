@@ -48,6 +48,10 @@ model Work {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deliveries  Delivery[]
+  employees   Employee[]
+  payslips    Payslip[]
+  dayPayments DayPayment[]
+  movements   Movement[]
 }
 
 /// Representantes de la empresa que firman las actas de entrega.
@@ -154,4 +158,186 @@ model Delivery {
   receivedOk        Boolean   @default(true)
   emailSentAt       DateTime?
   createdAt         DateTime  @default(now())
+}
+
+/* ── Personal y remuneraciones ─────────────────────────────── */
+
+/// Trabajadores de la empresa (con contrato o pagados por día).
+model Employee {
+  id                 String       @id @default(cuid())
+  rut                String       @unique
+  name               String
+  birthDate          DateTime?
+  nationality        String?
+  address            String?
+  phone              String?
+  email              String?
+  /// Cargo: "Maestro carpintero", "Jornal", …
+  position           String
+  /// plazo_fijo | obra_faena | indefinido | dia_hombre
+  contractType       String
+  startDate          DateTime
+  /// Término pactado (plazo fijo) o estimado (obra).
+  contractEndDate    DateTime?
+  /// activo | desvinculado
+  status             String       @default("activo")
+  terminationDate    DateTime?
+  /// Sueldo base mensual (contratos con liquidación).
+  baseSalary         Int          @default(0)
+  /// Valor del día (día hombre).
+  dailyRate          Int          @default(0)
+  /// Jornada semanal pactada en horas.
+  weeklyHours        Int          @default(42)
+  /// Paga gratificación legal mensual (art. 50).
+  gratification      Boolean      @default(true)
+  /// capital | cuprum | habitat | modelo | planvital | provida | uno
+  afp                String?
+  /// fonasa | isapre
+  healthSystem       String       @default("fonasa")
+  isapreName         String?
+  /// Plan de Isapre pactado, en UF.
+  isapreUf           Float?
+  /// Colación y movilización mensuales (no imponibles).
+  mealAllowance      Int          @default(0)
+  transportAllowance Int          @default(0)
+  bankName           String?
+  accountType        String?
+  accountNumber      String?
+  /// Obra donde trabaja actualmente.
+  workId             String?
+  work               Work?        @relation(fields: [workId], references: [id], onDelete: SetNull)
+  notes              String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  payslips           Payslip[]
+  settlements        Settlement[]
+  dayPayments        DayPayment[]
+}
+
+/// Indicadores previsionales de un mes (UF, UTM, topes, tasas).
+/// Se cargan desde Previred antes de emitir las liquidaciones del mes.
+model PayrollParams {
+  id                  String   @id @default(cuid())
+  /// "2026-11"
+  period              String   @unique
+  uf                  Float
+  utm                 Int
+  minWage             Int
+  topeAfpUf           Float
+  topeAfcUf           Float
+  /// JSON { capital: 11.44, … } — % total descontado al trabajador.
+  afpRatesJson        String
+  sisRate             Float
+  mutualRate          Float
+  employerPensionRate Float
+  /// previred (sincronizado solo) | manual (guardado a mano: no se sobrescribe)
+  source              String    @default("manual")
+  /// La UF del último día del mes aún no estaba publicada (se usó la anterior).
+  ufProvisional       Boolean   @default(false)
+  /// Última sincronización automática con Previred.
+  syncedAt            DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+/// Liquidación de sueldo mensual. Guarda una copia del cálculo y de los
+/// datos del trabajador para que el documento no cambie después.
+model Payslip {
+  id          String    @id @default(cuid())
+  folio       Int       @unique
+  employeeId  String
+  employee    Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  /// "2026-11"
+  period      String
+  /// Obra a la que se carga el costo.
+  workId      String?
+  work        Work?     @relation(fields: [workId], references: [id], onDelete: SetNull)
+  inputJson   String
+  /// Cálculo + datos del trabajador y parámetros usados (snapshot).
+  resultJson  String
+  netPay      Int
+  companyCost Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  movement    Movement?
+
+  @@unique([employeeId, period])
+}
+
+/// Finiquito: término de la relación laboral.
+model Settlement {
+  id         String    @id @default(cuid())
+  folio      Int       @unique
+  employeeId String
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  endDate    DateTime
+  /// Causal: 159-1 | 159-2 | 159-4 | 159-5 | 160 | 161-1
+  cause      String
+  inputJson  String
+  resultJson String
+  total      Int
+  createdAt  DateTime  @default(now())
+  movement   Movement?
+}
+
+/// Pago a un trabajador por días trabajados (día hombre).
+model DayPayment {
+  id         String    @id @default(cuid())
+  folio      Int       @unique
+  employeeId String
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  workId     String?
+  work       Work?     @relation(fields: [workId], references: [id], onDelete: SetNull)
+  /// Fecha de pago.
+  date       DateTime
+  /// Periodo trabajado, texto libre: "3 al 7 de noviembre".
+  periodText String?
+  days       Float
+  dailyRate  Int
+  extras     Int       @default(0)
+  discounts  Int       @default(0)
+  total      Int
+  notes      String?
+  createdAt  DateTime  @default(now())
+  movement   Movement?
+}
+
+/* ── Finanzas ─────────────────────────────────────────────── */
+
+/// Ingresos y gastos de la empresa. Los que nacen de una liquidación,
+/// un finiquito o un pago de día hombre se crean y borran solos.
+model Movement {
+  id              String      @id @default(cuid())
+  /// ingreso | gasto
+  type            String
+  date            DateTime
+  /// Monto total en pesos.
+  amount          Int
+  category        String
+  description     String
+  workId          String?
+  work            Work?       @relation(fields: [workId], references: [id], onDelete: SetNull)
+  /// factura | boleta | boleta_honorarios | guia | comprobante | otro
+  docType         String?
+  docNumber       String?
+  /// Proveedor (gasto) o cliente (ingreso).
+  counterparty    String?
+  counterpartyRut String?
+  /// efectivo | transferencia | cheque | tarjeta
+  paymentMethod   String?
+  notes           String?
+  /// Respaldo: foto o PDF del documento.
+  attachmentData  Bytes?
+  attachmentMime  String?
+  attachmentName  String?
+  payslipId       String?     @unique
+  payslip         Payslip?    @relation(fields: [payslipId], references: [id], onDelete: Cascade)
+  settlementId    String?     @unique
+  settlement      Settlement? @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  dayPaymentId    String?     @unique
+  dayPayment      DayPayment? @relation(fields: [dayPaymentId], references: [id], onDelete: Cascade)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([date])
 }

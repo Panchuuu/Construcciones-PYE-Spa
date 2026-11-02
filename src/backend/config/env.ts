@@ -46,6 +46,12 @@ export const env = {
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN ?? "",
   telegramChatId: process.env.TELEGRAM_CHAT_ID ?? "",
 
+  /**
+   * Clave de la tarea programada que actualiza los indicadores
+   * previsionales (GET /api/cron/indicadores). Sin ella la ruta no responde.
+   */
+  cronSecret: process.env.CRON_SECRET ?? "",
+
   isProduction: process.env.NODE_ENV === "production",
 } as const;
 

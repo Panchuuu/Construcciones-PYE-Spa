@@ -47,10 +47,11 @@ const nextConfig: NextConfig = {
        */
       allowedOrigins: ["**.devtunnels.ms"],
       /**
-       * Las actas de entrega incluyen dos firmas como imagen PNG,
-       * por eso subimos el límite por defecto de 1 MB.
+       * Las actas llevan dos firmas PNG, los proyectos una foto de hasta
+       * 4 MB y los gastos un respaldo de hasta 5 MB: subimos el límite
+       * por defecto de 1 MB para que quepan junto al resto del formulario.
        */
-      bodySizeLimit: "2mb",
+      bodySizeLimit: "6mb",
     },
   },
 };

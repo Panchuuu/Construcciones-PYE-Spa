@@ -123,10 +123,40 @@ npm run build
 
 y **Restart** en Setup Node.js App.
 
+> **Primera vez con Personal y Finanzas:** `migrate deploy` crea las tablas
+> nuevas. Los indicadores previsionales (UF, UTM, sueldo mínimo, topes,
+> tasas AFP y SIS) se traen **solos desde Previred cada 2 días** cuando
+> alguien usa el panel; también se pueden traer al momento en
+> **Panel → Personal → Parámetros → Actualizar ahora**. Revisar ahí una vez
+> la tasa de la **mutual** (0,93% básica + la adicional de la empresa), que
+> no viene en Previred y se copia de mes a mes.
+
+## Tarea programada de indicadores (recomendada)
+
+Respaldo para que los indicadores estén al día aunque nadie entre al panel.
+
+1. Agregar al `.env` una clave (generarla con
+   `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`):
+   ```bash
+   echo 'CRON_SECRET=PEGA_AQUI_LA_CLAVE' >> .env
+   ```
+   y **Restart** en Setup Node.js App.
+2. **DirectAdmin → Tareas Cron (Cron Jobs)** → nueva tarea:
+   - Minuto `0`, Hora `6`, Día del mes `*/2`, Mes `*`, Día de la semana `*`
+   - Comando:
+     ```bash
+     curl -fsS -H "Authorization: Bearer PEGA_AQUI_LA_CLAVE" https://construccionespyespa.cl/api/cron/indicadores > /dev/null
+     ```
+3. Probarla una vez a mano en la Terminal (debe responder `"ok":true`):
+   ```bash
+   curl -sS -H "Authorization: Bearer PEGA_AQUI_LA_CLAVE" https://construccionespyespa.cl/api/cron/indicadores
+   ```
+
 ## Copias de seguridad
 
 Los datos del panel viven en **`~/construcciones-pye/prisma/data.db`**
 (no está en Git). Ese archivo guarda clientes, trabajos, actas,
-cotizaciones **y las fotos de los proyectos**, así que es el respaldo
-más importante: incluirlo en las copias del hosting (JetBackup ya
+cotizaciones, **trabajadores, liquidaciones, finiquitos, ingresos y gastos
+(con sus respaldos adjuntos) y las fotos de los proyectos**, así que es el
+respaldo más importante: incluirlo en las copias del hosting (JetBackup ya
 respalda el home, pero conviene verificarlo).

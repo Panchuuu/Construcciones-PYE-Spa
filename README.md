@@ -140,6 +140,49 @@ conformes**:
 - **Envío del detalle** — por correo (Resend) al cliente, por WhatsApp con el
   resumen precargado, o impresión/PDF del acta con las firmas.
 
+### Personal y remuneraciones (`/admin/personal`)
+
+- **Trabajadores** — ficha con contrato (plazo fijo, por obra o faena,
+  indefinido o **día hombre**), sueldo, AFP, salud (Fonasa/Isapre en UF),
+  colación, movilización, datos bancarios y obra asignada.
+- **Parámetros** — UF, UTM, ingreso mínimo, topes imponibles y tasas (AFP,
+  SIS, mutual, aporte de la reforma previsional) **de cada mes**. Se traen
+  **solos desde Previred cada 2 días** (`indicators-sync.service.ts`): al usar
+  el panel, en segundo plano, y con la tarea programada
+  `GET /api/cron/indicadores` (ver `DESPLIEGUE.md`). La UF del mes en curso
+  queda *provisoria* hasta que se publica la del último día. Un mes guardado
+  a mano no se sobrescribe. La mutual y el aporte de la reforma no vienen en
+  Previred y se copian del mes anterior.
+- **Liquidaciones** — cálculo con gratificación art. 50 (tope 4,75 IMM),
+  horas extra al 50%, bonos, AFP, salud, seguro de cesantía según contrato,
+  impuesto único (tramos en UTM), anticipos y descuentos. Vista previa en
+  vivo, PDF para firmar y costo empresa con los aportes del empleador.
+- **Pagos día hombre** — días × valor del día (+ extras − descuentos),
+  sin descuentos previsionales, con comprobante PDF.
+- **Finiquitos** — según la causal (arts. 159, 160 y 161): indemnización por
+  años de servicio (tope 11 años y 90 UF), aviso previo, 2,5 días por mes en
+  contratos por obra y feriado proporcional en días corridos. Cada monto
+  propuesto se puede ajustar antes de emitir el PDF (para firmar ante
+  ministro de fe). Al emitirlo el trabajador queda desvinculado; anularlo lo
+  reactiva.
+
+El cálculo vive en `src/backend/lib/payroll.ts` y `settlement.ts` (funciones
+puras: las usan tanto el servidor como la vista previa). Cada documento
+guarda una copia de los datos y parámetros usados, así no cambia si después
+se edita la ficha del trabajador.
+
+> Los cálculos son una herramienta de apoyo: conviene que el contador revise
+> las primeras liquidaciones y cualquier finiquito antes de firmarlos.
+
+### Finanzas (`/admin/finanzas`)
+
+Ingresos y gastos con categoría, obra, proveedor/cliente, documento
+(factura, boleta, honorarios…), medio de pago y **respaldo adjunto** (foto o
+PDF, hasta 5 MB). Muestra totales del mes, gastos por categoría y el
+resultado de cada obra (también en la ficha de cada trabajo).
+Las liquidaciones (costo empresa), finiquitos y pagos día hombre crean su
+gasto **automáticamente**; se corrigen o borran desde su documento de origen.
+
 ### Crear un administrador
 
 ```bash

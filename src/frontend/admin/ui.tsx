@@ -65,7 +65,7 @@ export function AdminCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-carbon-200 bg-white p-6 shadow-card",
+        "rounded-2xl border border-carbon-200 bg-white p-5 shadow-card sm:p-6",
         className,
       )}
     >
@@ -97,7 +97,12 @@ export function AdminPageHeader({
           <p className="mt-1.5 text-sm text-carbon-600">{description}</p>
         )}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {/* En el teléfono la acción principal ocupa todo el ancho (blanco fácil para el pulgar). */}
+      {action && (
+        <div className="shrink-0 max-sm:[&>a]:flex max-sm:[&>a]:min-h-12 max-sm:[&>a]:w-full max-sm:[&>a]:justify-center">
+          {action}
+        </div>
+      )}
     </div>
   );
 }

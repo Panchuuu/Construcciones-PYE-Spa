@@ -29,7 +29,7 @@ export function ConfirmDeleteButton({
           });
         }
       }}
-      className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700 transition-colors hover:border-red-400 hover:bg-red-50 disabled:opacity-60"
+      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700 transition-colors hover:border-red-400 hover:bg-red-50 disabled:opacity-60"
     >
       {pending ? (
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />

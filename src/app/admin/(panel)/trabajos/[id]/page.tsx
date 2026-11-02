@@ -6,13 +6,17 @@ import {
   ClipboardPlus,
   MapPin,
   Pencil,
+  PlusCircle,
   User,
 } from "lucide-react";
 
 import { deleteWorkAction } from "@/backend/actions/admin.actions";
 import { requireAdmin } from "@/backend/auth/session";
 import { formatFolio } from "@/backend/services/deliveries.service";
+import { workFinance } from "@/backend/services/movements.service";
 import { getWork } from "@/backend/services/works.service";
+import { SignedAmount } from "@/frontend/admin/personal-ui";
+import { cn, formatCLP, formatDateUTC } from "@/frontend/lib/utils";
 import {
   AdminCard,
   AdminPageHeader,
@@ -32,7 +36,7 @@ export default async function TrabajoPage({
 }) {
   await requireAdmin();
   const { id } = await params;
-  const work = await getWork(id);
+  const [work, finance] = await Promise.all([getWork(id), workFinance(id)]);
   if (!work) notFound();
 
   return (
@@ -138,6 +142,67 @@ export default async function TrabajoPage({
             </ul>
           )}
         </div>
+      </section>
+
+      <section>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-bold text-carbon-900">
+            Finanzas de la obra
+          </h2>
+          <div className="flex gap-2">
+            <Link
+              href={`/admin/finanzas/nuevo?obra=${work.id}`}
+              className="inline-flex items-center gap-1.5 rounded-xl border-2 border-carbon-200 bg-white px-4 py-2 text-sm font-bold text-carbon-900 transition-colors hover:border-carbon-900"
+            >
+              <PlusCircle className="h-4 w-4" aria-hidden="true" />
+              Registrar gasto
+            </Link>
+            <Link
+              href={`/admin/finanzas?mes=todos&obra=${work.id}`}
+              className="inline-flex items-center rounded-xl px-3 py-2 text-sm font-bold text-brand-700 hover:text-brand-600"
+            >
+              Ver todo
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          {[
+            { label: "Ingresos", value: finance.totals.income, tone: "text-green-700" },
+            { label: "Gastos", value: finance.totals.expense, tone: "text-carbon-900" },
+            {
+              label: "Resultado",
+              value: finance.totals.balance,
+              tone: finance.totals.balance >= 0 ? "text-green-700" : "text-red-700",
+            },
+          ].map((stat) => (
+            <AdminCard key={stat.label} className="p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-carbon-500">{stat.label}</p>
+              <p className={cn("font-display mt-1 text-2xl font-extrabold tabular-nums", stat.tone)}>
+                {formatCLP(stat.value)}
+              </p>
+            </AdminCard>
+          ))}
+        </div>
+
+        {finance.recent.length > 0 && (
+          <ul className="mt-4 divide-y divide-carbon-100 overflow-hidden rounded-2xl border border-carbon-200 bg-white shadow-card">
+            {finance.recent.map((m) => (
+              <li key={m.id}>
+                <Link
+                  href={`/admin/finanzas/${m.id}`}
+                  className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 transition-colors hover:bg-carbon-50"
+                >
+                  <span className="w-24 text-xs text-carbon-500">{formatDateUTC(m.date)}</span>
+                  <span className="min-w-0 flex-1 truncate text-sm text-carbon-800">
+                    {m.description} <span className="text-carbon-500">· {m.category}</span>
+                  </span>
+                  <SignedAmount type={m.type} amount={m.amount} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );
